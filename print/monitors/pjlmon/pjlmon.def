@@ -1,0 +1,6 @@
+LIBRARY PJLMON
+
+EXPORTS
+    DllEntryPoint
+    InitializePrintMonitor
+

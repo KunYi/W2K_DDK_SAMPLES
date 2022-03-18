@@ -1,0 +1,7 @@
+DIRS = \
+     atishare \
+     bt-829 \
+     tuners \
+     crossbar \
+     tvaudio
+

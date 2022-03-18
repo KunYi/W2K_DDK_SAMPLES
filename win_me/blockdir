@@ -1,0 +1,6 @@
+[all]
+base=yes
+block=yes
+display=yes
+general=yes
+storage=yes

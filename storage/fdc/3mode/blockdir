@@ -1,0 +1,7 @@
+; blockdirs for %DDK_ROOT%\src\storage\fdc\3mode
+[ia64]
+fdc=yes
+fdc.2=yes
+[axp64]
+fdc=yes
+fdc.2=yes

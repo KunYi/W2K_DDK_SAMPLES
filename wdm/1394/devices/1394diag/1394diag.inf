@@ -1,0 +1,76 @@
+; 1394DIAG.INF -- 1394DIAG Test Device .inf for Windows 98 and Windows NT 
+; Copyright (c) 1999  Microsoft Corporation
+
+[Version]
+signature="$CHICAGO$"
+Class=1394Test
+ClassGuid={C459DF55-DB08-11d1-B009-00A0C9081FF6}
+Provider=%Msft%
+DriverVer=8/5/1999,1.1
+
+[DestinationDirs]
+defaultdestdir=11
+1394Test.CopyDriver=10,system32\drivers
+1394Test.CopyDll=11
+
+; =================== Class Sections ===========================
+[ClassInstall32]
+Addreg=1394TestClassReg
+
+[ClassInstall]
+Addreg=1394TestClassReg
+
+[1394TestClassReg]
+HKR,,,,%1394TestClassName%
+HKR,,Icon,,-21
+
+; =================== Table of content =========================
+
+[Manufacturer]
+%MicrosoftMfg%=Microsoft
+
+; =================== Microsoft ========================
+
+[Microsoft]
+%1394\MICROSOFT&1394_PC%=1394TEST,1394\MICROSOFT&1394_PC
+%1394\50F2&0.DeviceDesc%=1394TEST,1394\50F2&0
+%1394\031887&040892.DeviceDesc%=1394TEST,1394\031887&040892
+
+[1394TEST]
+AddReg=1394TEST.AddReg
+CopyFiles=1394TEST.CopyDriver,1394TEST.CopyDll
+
+[1394TEST.AddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,1394diag.sys
+
+[1394TEST.NT]
+AddReg=1394TEST.AddReg
+CopyFiles=1394TEST.CopyDriver,1394TEST.CopyDll
+
+[1394TEST.NT.Services]
+AddService=1394TEST,2,1394TEST_ServiceInstall
+
+[1394TEST_ServiceInstall]
+DisplayName=%1394\031887&040892.DeviceDesc%
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%12%\1394diag.sys
+
+[1394TEST.CopyDriver]
+1394diag.sys
+
+[1394TEST.CopyDll]
+1394api.dll
+
+[Strings]
+Msft="Microsoft"
+1394TestClassName="1394 Test Device"
+
+MicrosoftMfg="Microsoft"
+1394\MICROSOFT&1394_PC="1394 Host"
+1394\50F2&0.DeviceDesc="1394 Host"
+1394\031887&040892.DeviceDesc="1394 Test Device"
+
+

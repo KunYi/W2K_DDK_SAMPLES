@@ -1,0 +1,34 @@
+!IF 0
+
+Copyright (C) Microsoft Corporation, 1996 - 1999
+
+Module Name:
+
+    sources.
+
+!ENDIF
+
+TARGETNAME=classpnp
+TARGETPATH=obj
+TARGETPATHLIB=$(DDK_LIB_DEST)
+TARGETTYPE=EXPORT_DRIVER
+
+!IFNDEF MSC_WARNING_LEVEL
+MSC_WARNING_LEVEL=/W3
+!ENDIF
+
+MSC_WARNING_LEVEL=$(MSC_WARNING_LEVEL) /WX
+
+INCLUDES=..\inc;..\..\inc
+
+SOURCES=autorun.c   \
+        class.c     \
+        classwmi.c  \
+        create.c    \
+        dictlib.c   \
+        lock.c      \
+        power.c     \
+        class.rc
+
+DLLDEF=$(O)\class.def
+

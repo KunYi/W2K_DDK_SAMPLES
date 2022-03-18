@@ -1,0 +1,46 @@
+
+TARGETNAME=sfilter
+TARGETPATH=obj$(BUILD_ALT_DIR)
+TARGETTYPE=DYNLINK
+
+#
+# We depend on the CRT so use _DllMainCRTStartup as our entrypoint.
+#
+DLLENTRY=_DllMainCRTStartup
+
+TARGETLIBS=\
+    $(DDK_LIB_PATH)\advapi32.lib    \
+    $(DDK_LIB_PATH)\comctl32.lib    \
+    $(DDK_LIB_PATH)\kernel32.lib    \
+    $(DDK_LIB_PATH)\ndispnp.lib    \
+    $(DDK_LIB_PATH)\ole32.lib       \
+    $(DDK_LIB_PATH)\oleaut32.lib    \
+    $(DDK_LIB_PATH)\user32.lib      \
+    $(DDK_LIB_PATH)\uuid.lib
+
+INCLUDES=
+
+#
+# Consult build.hlp for the following.  Generally, these
+# should be left alone.
+#
+MIDL_OPTIMIZATION=-Oicf -robust -no_format_opt -error all
+MIDL_FLAGS=/tlb $(O)\sfiltern.tlb
+C_DEFINES=-DWIN32 -DUNICODE -D_UNICODE
+MSC_WARNING_LEVEL=/W3 /WX
+PRECOMPILED_CXX=1
+PRECOMPILED_INCLUDE=pch.h
+RCOPTIONS=-i $(O) -N
+UMTYPE=windows
+USE_STATIC_ATL=1
+USE_MSVCRT=1
+USE_NATIVE_EH=1
+USE_RTTI=1
+
+SOURCES=\
+    dllmain.cpp  \
+    implinc.cpp  \
+    sfilter.cpp  \
+    sfilter.rc   \
+    sfiltern.idl
+

@@ -1,0 +1,13 @@
+
+TARGETNAME=kbdus
+TARGETPATH=obj
+TARGETTYPE=DYNLINK
+
+!INCLUDE ..\sources.inc
+
+INCLUDES=..\inc
+
+SOURCES=kbdus.c kbdus.rc
+
+
+

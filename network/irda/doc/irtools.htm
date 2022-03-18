@@ -1,0 +1,181 @@
+<html>
+
+<head>
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<meta NAME="GENERATOR" CONTENT="Microsoft FrontPage 3.0">
+<title>Infrared Device Miniport Development Kit for Windows NT 5</title>
+</head>
+
+<body LINK="#0000ff">
+<font FACE="Arial Narrow" SIZE="6"><b>
+
+<p>Infrared Device Miniport Development Introduction</p>
+</b></font><font SIZE="2">
+
+<p>This section contains:</font>
+
+<ul>
+  <li><font SIZE="2">SLEDGE, a Winsock compatible stress test application.</font></li>
+  <li><font SIZE="2">SNIFFIR, a COM based application which can monitor infrared packets.</font></li>
+  <li><font SIZE="2">DBGCON, a utility for gathering debug data from the checked version of
+    IRDA.SYS</font></li>
+</ul>
+<b><font FACE="Arial Narrow" SIZE="6">
+
+<p>DbgCon</p>
+</font><font SIZE="2">
+
+<p>DBGCON</b> allows monitoring the activity in the IrDA protocol stack without using
+kernel debugger. Execute <b>DBGCON</b>, and it will begin displaying debug data from
+protocol stack. You may press ESC to modify what debug data is displayed, or press Q to
+quit. <b>DBGCON</b> will only work with the checked version of <b>IRDA.SYS</b>.</p>
+<b>
+
+<p>DBGCON debug options:
+
+<ul>
+  </b>
+  <li>RXFRAME &#150; (default off) Display IrLAP header of frame received from miniport</li>
+  <li>TXFRAME &#150; (default off) Display IrLAP header of frame to be transmitted to miniport</li>
+  <li>MAC &#150; (default off) Not used</li>
+  <li>NDIS &#150; (default off) Display irda.sys lower edge activity (not too useful)</li>
+  <li>LAPLOG &#150; (default off) Display IrLAP event/actions logging</li>
+  <li>LAP &#150; (default off) Display IrLAP information (little output)</li>
+  <li>LMP &#150; (default off) Display full IrLMP debugging</li>
+  <li>LMP_CONN &#150; (default off) Display LMPDU connection information</li>
+  <li>LMP_CREDIT &#150; (default off) Display TinyTPP credit information</li>
+  <li>LMP_IAS &#150; (default off) Display IrLMP IAS information</li>
+  <li>TDI &#150; (default off) Display upper edge activity</li>
+  <li>TDI_IRP &#150; (default off) Display Irp requests from TDI client</li>
+  <li>WARN &#150; (default on) Display minor errors</li>
+  <li>ERROR &#150; (default on) Display severe errors</li>
+  <li>Output: Debugger &#150; (default off) Select this to cause IRDA to direct its debug
+    output to the kernel debugger.</li>
+  <li>Output: Console &#150; (default on) Select this to cause IrDA to direct its debug output
+    to DBGCON.</li>
+</ul>
+</font><b><font FACE="Arial Narrow" SIZE="6">
+
+<p>Sledge</p>
+</font><font SIZE="2">
+
+<p>Sledge</b> is a stress utility used by Microsoft to test the IrDA protocol and
+miniports. It opens multiple connections between two computers, sends data both ways in
+random sized packets, and reports the results.</p>
+
+<p>A copy of <b>Sledge</b> must be running on both systems. One will be the server, the
+other the client.</p>
+
+<p>On the server, execute <b>Sledge</b> and issue the following commands:
+
+<ol>
+  <li>SERV-IRSOCK ON (required)</li>
+  <li>GO(required)</li>
+</ol>
+
+<p>On the client, execute <b>Sledge</b> and issue these commands:
+
+<ol>
+  <li>IRSOCK 10 2 (required command, parameters are adjustable)</li>
+  <li>GO</li>
+</ol>
+
+<p>There are other <b>Sledge</b> commands to adjust the parameters of the test. Enter a
+&quot;?&quot; at the prompt for a list. Some parameters of note:
+
+<ul>
+  <li>SERV-RECV-LEN # - Adjusts the server read size. A value of 2040 would be most efficient
+    for Infrared.</li>
+  <li>PACKET-LEN min max &#150; Adjust the client send size. Min 2040 and max 2040 will force
+    it to always use the largest IrDA packet size.</li>
+</ul>
+</font><b><font FACE="Arial Narrow" SIZE="6">
+
+<p>Sniffir</p>
+</font><font SIZE="2">
+
+<p>Sniffir</b> is an infrared monitoring utility. It requires no drivers, and operates on
+a SIR device that has been exposed through a WIN32 COM port. It will run on Intel Windows
+NT or 9X platforms. It will log packets coming from both ends of a connection pair, at
+speeds up to 115200 baud.</p>
+
+<p>It currently supports the following hardware:
+
+<ul>
+  <li>Most laptop generic SIR implementations</li>
+  <li>Extended Systems JetEye</li>
+</ul>
+
+<p>To use <b>Sniffir</b>, align the infrared adapters in a triangle so that the<b> </b>sniffing
+adapter can see both connected adapters, and vice versa. <b>Sniffir</b> should be default
+begin sniffing at 9600 baud, but if the connection speed changes, <b>Sniffir</b> should
+change to match, at any speed that it supports.</p>
+
+<p>Because <b>Sniffir</b> is primarily an SIR utility, it may incorrectly report
+information relating to MIR or FIR speeds.</p>
+</font><b><font FACE="Arial Narrow" SIZE="6">
+
+<p>Notes</p>
+</font><font SIZE="2">
+
+<p>Miniports: Min Turnaround Time</b> &#150; It seems that the custom has become to
+implement min turnaround time in the miniport via NdisStallExecution(). The problem is
+that NdisStallExecution() effects a freeze on the system for the duration of the call, and
+NOTHING else can happen. Since the largest min turnaround time is 10 milliseconds, the
+impact on overall system performance is large. In the case of the NSC driver, we were able
+to reduce CPU utilization significantly by changing from NdisStallExecution() to using
+NDIS Timers.</p>
+<b>
+
+<p>Installation and Plug and Play:</b> Installation of some infrared devices is more
+complex than it should be. The most common reasons for this are machine-specific BIOS
+issues.&nbsp; Some FIR implementations plug and play incorrectly. They may advertise
+themselves only via the generic SIR Plug and Play IDs. As a result of this, many FIR
+implementations will be installed by default as SIR, and the user will be required to <b>Change
+driver</b> in the control panel to achieve FIR functionality. There is little that can be
+done for the existing installed base which have this problem, but it is a caution to
+vendors to do it right. To insure proper operation, the PNP ID of a given infrared device
+should be unique to that hardware, so that both controller and transceiver type can be
+configured without ANY user intervention.</p>
+<b>
+
+<p>Winsock:</b> The interface to the IrDA stack provided through Winsock in this DDK does
+not contain the following support:
+
+<ul>
+  <li>Setting local IAS entries through setsockopt(). Querying a remote IAS <i>is</i>
+    available through getsockopt() however.</li>
+  <li>Lazy discovery through getsockopt(). See <i>Writing Ad-Hoc Point-to-Point Networking
+    Applications using IrDA</i> for an explanation of Lazy Discovery.</font><font SIZE="2"></li>
+</ul>
+
+<p>Common IrDA Miniport mistakes:</p>
+<b>
+
+<p>DMA:</b> Some vendors have implemented programming DMA via direct I/O under Win9X,
+bypassing NDIS. This is not recommended under any circumstances in Windows NT. Drivers
+that do this may be rejected from inclusion on the NT CD release.</p>
+<b>
+
+<p>NDIS: MiniportSendPackets():</b> Miniports must not expect NDIS to serialize calls to
+MiniportSendPackets(). MiniportSendPackets() can and will be called several times before
+even one packet has been completed.</p>
+<b>
+
+<p>NDIS: MiniportSendPackets():</b> Some drivers have mistakenly kept the PacketArray
+which is passed to the miniport in this call. This is illegal. NDIS assumes that when
+MiniportSendPackets() returns, all necessary data has been taken from the array, and NDIS
+is free to fill in new data, even before the packets indicated in the call have been
+completed.</p>
+<b>
+
+<p>NDIS: NdisMIndicateReceivePacket()</b>: Receive packets indicated to the protocol may
+be held for an indefinite period. Many miniports indicate packets which are resident in
+the miniport&#146;s receive DMA buffer, then restart DMA, which can corrupt the packet
+before the protocol has released it. Developers that wish to avoid the overhead of copying
+packets from their receive DMA buffers should inspect the mechanism in NSCIRDA.SYS. It
+manages the DMA buffer so that it can indicates packets to the protocol and still start
+receive DMA in the unused portion of the buffer.</p>
+</font>
+</body>
+</html>

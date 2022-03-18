@@ -1,0 +1,30 @@
+TARGETNAME=1394API
+TARGETTYPE=DYNLINK
+DLLENTRY=DLLMain
+
+SYNCHRONIZE_BLOCK=1
+USE_MAPSYM=1
+UMTYPE=windows
+
+INCLUDES=..\..\inc;              \
+         ..\..\devices\1394diag;
+
+TARGETLIBS=$(SDK_LIB_PATH)\kernel32.lib \
+           $(SDK_LIB_PATH)\user32.lib   \
+           $(SDK_LIB_PATH)\setupapi.lib \
+           $(SDK_LIB_PATH)\libcmt.lib
+
+TARGETPATH=obj
+TARGETPATHLIB=$(SDK_LIB_DEST)
+
+SOURCES= 1394api.rc      \
+         1394api.c       \
+         1394main.c      \
+         asyncapi.c      \
+         debug.c         \
+         isochapi.c      \
+         util.c
+
+USER_C_FLAGS=/MT
+C_DEFINES=/DW32 /DWIN32
+

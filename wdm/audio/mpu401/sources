@@ -1,0 +1,22 @@
+#   Copyright (c) 1996-1999 Microsoft Corporation.  All rights reserved.
+
+TARGETNAME=msmpu401
+TARGETTYPE=DRIVER
+TARGETPATH=obj
+
+TARGETLIBS= \
+        $(SDK_LIB_PATH)\portcls.lib\
+        $(SDK_LIB_PATH)\libcntpr.lib\
+        $(SDK_LIB_PATH)\ksguid.lib\
+        ..\lib\*\stdunk.lib
+
+INCLUDES=..\inc
+
+MSC_WARNING_LEVEL=-W3 -WX
+
+C_DEFINES=-D_WIN32 -DUNICODE -D_UNICODE -DUNDER_NT -DDEBUG_LEVEL=DEBUGLVL_TERSE
+LINKER_FLAGS=-map
+
+SOURCES=\
+        adapter.cpp     \
+        mpu401.rc

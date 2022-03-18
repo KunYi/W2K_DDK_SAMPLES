@@ -1,0 +1,68 @@
+[Version]
+Signature="$WINDOWS NT$"
+Class=FloppyDisk
+ClassGuid={4D36E980-E325-11CE-BFC1-08002BE10318}
+Provider=%TSB%
+;;LayoutFile=layout.inf
+
+[SourceDisksNames]
+1 = "Toshiba NT Floppy Driver",disk1,,\
+
+[SourceDisksFiles]
+%DriverFileName% = 1
+
+[ClassInstall32.NT]
+AddReg=floppy_class_addreg
+
+[floppy_class_addreg]
+HKR,,,,%floppyClassName%
+HKR,,EnumPropPages32,,"SysSetup.Dll,DiskPropPageProvider"
+HKR,,SilentInstall,,1
+HKR,,NoInstallClass,,1
+HKR,,Icon,,102
+
+[Manufacturer]
+%TSB%=floppy_device
+
+[DestinationDirs]
+floppy_copyfiles=12
+
+[floppy_device]
+;%floppy_devdesc%=floppy_install,*PNP701
+;%floppy_devdesc%=floppy_install,*PNP702
+;%floppy_devdesc%=floppy_install,*PNP703
+;%floppy_devdesc%=floppy_install,*PNP704
+%floppy_devdesc%=floppy_install,GenFloppyDisk
+%floppy_devdesc%=floppy_install,LbrtFloppyDisk
+
+[floppy_install.NT]
+CopyFiles=floppy_copyfiles
+DriverVer=11/16/1998,5.1.2
+
+[floppy_copyfiles]
+%DriverFileName%
+
+
+[floppy_install.NT.Services]
+AddService=flpydisk,2,floppy_ServiceInstallSection
+
+[floppy_ServiceInstallSection]
+DisplayName=%floppy_ServiceDesc%
+ServiceType=%SERVICE_KERNEL_DRIVER%
+StartType=%SERVICE_START_MANUAL%
+ErrorControl=%SERVICE_ERROR_NORMAL%
+ServiceBinary = %12%\%DriverFileName%
+
+[Strings]
+TSB="Toshiba"
+floppyClassName="Floppy disk drives"
+floppy_devdesc="TOSHIBA 3-mode floppy disk drive"
+floppy_ServiceDesc="TOSHIBA 3-mode floppy disk driver"
+
+DriverFileName=tosflpy.sys
+;*******************************************
+;Handy macro substitutions (non-localizable)
+SERVICE_KERNEL_DRIVER = 1
+SERVICE_START_MANUAL = 3
+SERVICE_ERROR_NORMAL = 1
+

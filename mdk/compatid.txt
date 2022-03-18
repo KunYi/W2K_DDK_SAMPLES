@@ -1,0 +1,86 @@
+Microsoft Windows 95 Compatible Device IDs
+    for Plug and Play Modems
+
+Version 1.0 / August 4, 1995
+Copyright (c) 1995 Microsoft Corporation
+
+This document specifies compatible device IDs for Plug and Play
+internal (ISA) and external (RS-232) modems designed for Microsoft
+Windows 95.  These IDs are not intended for use with other bus
+or connector types, e.g. PCMCIA, parallel port, etc.
+
+Plug and Play modems should report appropriate compatible IDs so
+that Windows 95 can install and use a default driver in the event 
+that the regular manufacturer-supplied install disk and INF file 
+are not available.
+
+NOTE:  Compatible IDs are not intended to replace actual tested
+       Windows 95 install disks with INF files. 
+
+       Do not use compatible ID for main device IDs.
+       Rather, modems must have device IDs unique to manufacturer
+       and product, as specified in the specifications for ISA and 
+       RS-232 Plug and Play devices.
+
+To use the table below, match modems to the appropriate row
+based on Bus type, Commands, and Max DCE speed.  Then, select 
+ONE of the compatible IDs, depending on whether or not the 
+modem supports VoiceView.
+
+Commands:  Select an "Enhanced" ID if the modem supports the
+           following commands as described.  Most importantly,
+           the modem must never return "ERROR" in response to
+           any of these commands.
+
+    L0/L2/L3        - Adjust speaker volume
+
+    M0/M1/M2/M3     - Set speaker mode
+
+    X3/X4           - Disable/enable dial tone detection
+
+    ;               - Allows dial strings to be split, without
+                      dial tone detection on subsequent ATD commands.
+                      Test this against very long dial strings, e.g.
+                      long distance credit card numbers, etc.
+                      
+Max DCE:  "Any" means that Windows 95 will set the port (DTE)
+          speed to 9600 bps by default, and assume maximum
+          DTE and DCE rates of 115200 bps.  Use "Any" for
+          modems that have non-standard maximum bps DCE rates,
+          such as 33600 bps.
+
+IMPORTANT:  The basic send and receive portions of the Modem
+Compatibility Tests (MCTs) included in the Windows 95 Device
+Driver Kit (DDK) must be able to pass for a modem installed 
+using a compatible ID.  Also, Windows 95 programs such as
+HyperTerminal, The Microsoft Network (MSN), Dial-Up Networking,
+and Phone Dialer must be able to make connections in this
+configuration.  If any of these tests fail, then the modem is
+*not* compatible with the selected ID, and should not be reported
+as such.  Similarly, VoiceView features should be thoroughly
+tested on modems which report a VoiceView compatible ID.
+         
+
+Regular   VoiceView   Bus      Commands   Max DCE (bps)
+-------------------   -----    --------   -------------
+*PNPC100  *PNPC110    RS232    Generic    9600
+*PNPC101  *PNPC111    RS232    Generic    14400
+*PNPC102  *PNPC112    RS232    Generic    28800
+*PNPC103  *PNPC113    RS232    Generic    Any
+
+*PNPC104  *PNPC114    RS232    Enhanced   9600
+*PNPC105  *PNPC115    RS232    Enhanced   14400
+*PNPC106  *PNPC116    RS232    Enhanced   28800
+*PNPC107  *PNPC117    RS232    Enhanced   Any
+
+*PNPC108  *PNPC118    ISA      Generic    9600
+*PNPC109  *PNPC119    ISA      Generic    14400
+*PNPC10A  *PNPC11A    ISA      Generic    28800
+*PNPC10B  *PNPC11B    ISA      Generic    Any
+
+*PNPC10C  *PNPC11C    ISA      Enhanced   9600
+*PNPC10D  *PNPC11D    ISA      Enhanced   14400
+*PNPC10E  *PNPC11E    ISA      Enhanced   28800
+*PNPC10F  *PNPC11F    ISA      Enhanced   Any
+
+

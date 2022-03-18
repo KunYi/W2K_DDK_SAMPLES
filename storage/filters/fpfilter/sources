@@ -1,0 +1,12 @@
+TARGETNAME=fpfilter
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+
+
+INCLUDES=..\inc
+
+SOURCES= \
+        fpfilter.c   \
+        fpfilter.rc
+
+

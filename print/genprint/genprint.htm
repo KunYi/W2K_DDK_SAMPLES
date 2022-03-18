@@ -1,0 +1,53 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>Genprint</TITLE>
+</HEAD>
+<BODY LINK="#0000ff">
+
+<FONT FACE="Verdana" SIZE=5><H2>Genprint</H2>
+</FONT><FONT FACE="Verdana" SIZE=2>
+
+<H3>SUMMARY</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+A Print Processor is a user-mode DLL responsible for converting a print job's spooled data into a format that can be sent to a print monitor. 
+Please refer to the Windows&#174; 2000 DDK documentation for more information.<P>
+This print processor sample works on both x86 and Alpha platforms and is 64-bit compliant. Both checked and free builds are available.  <P>
+<H3>BUILDING THE SAMPLE</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+To build the sample, use the <b>build</B> command. Microsoft&#174; Visual C&#174; must be present on your machine for the sample to build successfully.<P>
+Once built, the sample produces four binaries: Genprint.dll, Genprint.lib (an export lib), Genprint.exp, and, if built in a checked environment, Genprint.pdb.<P>
+To install the sample print processor, an installation application must call the spooler's <b>AddPrintProcessor</b> function. <P>
+<B>Note</B>: Theoretically, it's possible to build using Visual C. Then the user must look into sources and makefile and create a Visual C project. The user would also need to include some header files and link against libraries that come with the DDK.<P>
+<B>Known issue</B>: If used in a mixed Microsoft&#174; Windows NT&#174; 4.0/Windows&#174; 2000 clustering environment, only <b>RAW</b> should be selected as data type, not <b>EMF</b>.
+
+<H3>CODE TOUR</H3>
+<H4>File Manifest</H4>
+</FONT><U><PRE>File&#9;&#9;Description
+</U>
+Emf.c&#9;	Handles EMF data type
+Local.c&#9;	Contains debugging functions
+Local.h&#9;	Local header file
+Makefile&#9;Makefile used by build
+Messages.mc&#9;File for the message compiler, will generate messages.h, messages.rc and MSG00001.bin
+Parsparm.c&#9;Routine to send formfeed to a printer
+Raw.c&#9;	Handles RAW data type
+Sources&#9;	File used by build
+Support.c&#9;Support routines for GenPrint
+Text.c&#9;	Handles TEXT data type
+Util.c&#9;	Other support routines for GenPrint
+Winppi.h&#9;Header file for GDI function used
+Winprint.c&#9;Win32 print processor support functions
+Winprint.def&#9;Def file
+Winprint.h&#9;Header file for Win32 print processor support functions
+Winprint.prf&#9;.prf file
+Winprint.rc&#9;Resources
+
+</FONT><P ALIGN="CENTER"><A HREF="#top"><FONT FACE="Verdana" SIZE=2>Top of page</FONT></A><FONT FACE="Verdana" SIZE=2> </P></FONT>
+<TABLE CELLSPACING=0 BORDER=0 WIDTH=624>
+<TR><TD VALIGN="MIDDLE" BGCOLOR="#00ffff" HEIGHT=2>
+<P></TD>
+</TR>
+</TABLE>
+
+<FONT FACE="MS Sans Serif" SIZE=1><P>&copy; 1999 Microsoft Corporation</FONT><FONT FACE="Verdana" SIZE=2> </P></FONT></BODY>
+</HTML>

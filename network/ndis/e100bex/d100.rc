@@ -1,0 +1,101 @@
+/****************************************************************************
+** COPYRIGHT (C) 1994-1997 INTEL CORPORATION                               **
+** DEVELOPED FOR MICROSOFT BY INTEL CORP., HILLSBORO, OREGON               **
+** HTTP://WWW.INTEL.COM/                                                   **
+** THIS FILE IS PART OF THE INTEL ETHEREXPRESS PRO/100B(TM) AND            **
+** ETHEREXPRESS PRO/100+(TM) NDIS 5.0 MINIPORT SAMPLE DRIVER               **
+****************************************************************************/
+
+/****************************************************************************
+Module Name:
+    d100.rc
+
+This driver runs on the following hardware:
+    - 82557/82558 based PCI 10/100Mb ethernet adapters
+    (aka Intel EtherExpress(TM) PRO Adapters)
+
+Environment:
+    Kernel Mode - Or whatever is the equivalent on WinNT
+
+Revision History
+    - JCB 8/14/97 Example Driver Created
+*****************************************************************************/
+
+#ifdef RC_INVOKED
+#include <windows.h>
+#include <ntverp.h>
+#endif
+
+//-----------------------------------------------
+// the following lines are specific to this file
+//-----------------------------------------------
+
+// VER_FILETYPE, VER_FILESUBTYPE, VER_FILEDESCRIPTION_STR
+// and VER_INTERNALNAME_STR must be defined before including COMMON.VER
+// The strings don't need a '\0', since common.ver has them.
+
+#define VER_FILETYPE    VFT_DRV
+
+#define VER_FILESUBTYPE VFT2_DRV_NETWORK
+
+// Undefine the MS company name
+#ifdef VER_COMPANYNAME_STR
+#undef VER_COMPANYNAME_STR
+#endif
+
+// Undefine the MS product name
+#ifdef VER_PRODUCTNAME_STR
+#undef VER_PRODUCTNAME_STR
+#endif
+
+// Define our own company and product name
+#define VER_COMPANYNAME_STR         COMPANYNAME
+#define VER_PRODUCTNAME_STR         PRODUCTNAME
+
+// Define our own file name and description
+#define VER_FILEDESCRIPTION_STR     FILEDESCRIPTION
+#define VER_INTERNALNAME_STR        INTERNALNAME
+#define VER_ORIGINALFILENAME_STR    ORIGINALFILENAME
+
+// Undefine the MS copyright years
+#ifdef VER_LEGALCOPYRIGHT_YEARS
+#undef VER_LEGALCOPYRIGHT_YEARS
+#endif
+
+#define COMPANYNAME         "Intel Corporation"
+
+#define PRODUCTNAME         "Example Driver for Intel EtherExpress PRO PCI Adapters"
+
+#define FILEDESCRIPTION     "NDIS 5.0 driver"
+
+#define INTERNALNAME        "E100BEX.SYS"
+#define ORIGINALFILENAME    "E100BEX.SYS"
+
+#define LEGALCOPYRIGHT      "Intel Corp."
+
+#define VENDORDESCRIPTOR    PRODUCTNAME
+
+#define D100_SUBVENDOR_ID   0X8086
+
+// Define our own copyright years
+#define VER_LEGALCOPYRIGHT_YEARS    "1994-1997"
+
+// Define our own copyright string
+#define VER_LEGALCOPYRIGHT_STR  "Copyright " VER_LEGALCOPYRIGHT_YEARS ", " LEGALCOPYRIGHT " All Rights Reserved."
+
+// Define our driver version
+#define VER_FILEVERSION         1,01,00,0000
+#define VER_FILEVERSION_STR     "1.01.00.0000"
+
+#undef VER_PRODUCTVERSION_STR
+#define VER_PRODUCTVERSION_STR  VER_FILEVERSION_STR
+
+#ifdef RC_INVOKED
+#include "common.ver"
+// put the next line inside this ifdef because
+// we include this file in request.c
+// This supplies the GUID support
+NdisMofResource         MOFDATA         e100b.bmf
+#endif
+
+

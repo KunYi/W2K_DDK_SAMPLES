@@ -1,0 +1,19 @@
+TARGETNAME=1394DIAG
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+DRIVERTYPE=WDM
+
+C_DEFINES=-DDRIVER
+
+INCLUDES=..\..\inc;
+
+SOURCES= \
+        1394diag.c \
+        1394api.c \
+        1394diag.rc \
+        asyncapi.c \
+        ioctl.c \
+        isochapi.c \
+        pnp.c \
+        power.c
+

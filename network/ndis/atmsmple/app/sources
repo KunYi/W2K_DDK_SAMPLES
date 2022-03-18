@@ -1,0 +1,27 @@
+TARGETPATH=obj
+TARGETTYPE=PROGRAM
+TARGETNAME=atmsmapp
+
+
+INCLUDES=..\inc
+
+SOURCES= \
+         atmsmapp.c \
+         utils.c \
+         atmsmapp.rc
+
+WARNING_LEVEL=-W4
+
+USE_MSVCRT=1
+
+TARGETLIBS= \
+       $(DDK_LIB_PATH)\kernel32.lib \
+       $(DDK_LIB_PATH)\advapi32.lib \
+       $(DDK_LIB_PATH)\msvcrt.lib  
+       
+
+UMTYPE=console
+UMAPPL=
+UMTEST=
+UMBASE=0x01000000
+

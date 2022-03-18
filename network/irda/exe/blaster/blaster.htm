@@ -1,0 +1,42 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>BLASTER - Winsock IrDA Sample Application</TITLE>
+</HEAD>
+<BODY>
+
+<FONT FACE="Verdana"><H2>BLASTER – Winsock IrDA Sample Application</H2>
+<H3>SUMMARY</H3>
+</FONT><FONT FACE="Verdana" SIZE=2><P>Blaster is a simple application that illustrates Windows NT 5.0’s support of the IrDA protocol. IrDA provides reliable point to point connectivity between 2 computers equipped with infrared transceivers. Blaster uses the WinSock API with the IrDA address family to setup a single connection and &quot;blast&quot; random data to a peer machine that is also running blaster.</P>
+
+<P>Blaster can be used during the development of Winsock application or OEM IrDA NDIS drivers to get an initial impression of performance.</P>
+<P> </FONT><FONT FACE="Verdana" SIZE=2 COLOR="#ff0000"> </P>
+</FONT><FONT FACE="Verdana"><H3>BUILDING THE SAMPLE</H3>
+</FONT><FONT FACE="Verdana" SIZE=2><P>To build BLASTER.EXE, select either the checked or free DDK environment, change to the directory BLASTER and type BUILD.</P>
+</FONT><FONT FACE="Verdana"><H3>RESOURCES</H3>
+</FONT><FONT FACE="Verdana" SIZE=2><P>IrDA Winsock applications are discussed in greater detail in the .DOC files included in the IrDA section of the DDK samples. </P>
+</FONT><FONT FACE="Verdana"><H3>CODE TOUR</H3>
+<H4>File Manifest</H4>
+</FONT><U><PRE>Files         Description
+</U>BLASTER.HTM   The documentation for this sample (this file).
+<FONT FACE="Courier">SOURCES       The generic file for building the code sample.
+BLASTER.C     The Source for blaster.
+BLASTER.RC    The resource file for blaster.
+MAKEFILE      The standard DDK makefile.
+RESOURCE.H    C Defines for blaster.
+RESRC1.H      More C Defines.
+</FONT><FONT FACE="Verdana"></PRE>
+<H4>Programming Tour</H4>
+</FONT><FONT FACE="Verdana" SIZE=2><P>The major topics covered in this tour are: </P>
+
+<UL>
+<LI>Enumerating Visible Devices </LI>
+<LI>Bind()</LI></UL>
+
+<P>The majority of code in this sample is actually devoted to window setup.  The heart of the application and the source of most interest to the reader are the functions <B>SendThread()</B> and <B>RecvThread()</B>.  All of the functionality required for IrDA connections are encapsulated there.  The application itself is very simple.  On startup, <B>RecvThread()</B> creates a socket to listen for incoming IrDA connections.  When the user clicks the only button in the interface, <B>SendThread()</B> is invoked to enumerate available devices and establish a connection with the first visible device.  It will proceed to ‘blast’ data through this connection, and then close it.</P>
+</FONT><FONT FACE="Verdana"><H4>Enumerating Visible Devices</H4>
+</FONT><FONT FACE="Verdana" SIZE=2><P>Infrared Devices which are in range will be enumerated when the user calls <B>getsockopt()</B> with the parameters of <B>SOL_IRLMP</B> and <B>IRLMP_ENUMDEVICES</B>.  Note that no special coding is required if the computer has more than one IrDA adapter.  The protocol will automatically query for all visible devices on all IrDA adapters present, and return them in a single call.  Note that if a device is visible to more than one adapter, it may be presented twice in the list.</P>
+</FONT><FONT FACE="Verdana"><H4>Bind()</H4>
+</FONT><FONT FACE="Verdana" SIZE=2><P>Special notice is made here that, unlike other Winsock protocol families, no call to <B>bind()</B> is required before calling <B>connect()</B>.  <B>Bind()</B> is normally used to insure the socket is correctly bound to a local address, generally for cases of multiple local adapters.  The IrDA protocol abstracts multiple adapters so that this is not necessary.  All context information needed to force the connection through the correct adapter is contained in the <B>SOCKADDR_IRDA</B> structure provided to <B>connect()</B>, in these fields: <B>irdaDeviceID</B> and <B>irdaDeviceName</B>.  If you do attempt to <B>bind()</B> on an outbound connection, the <B>connect() </B>will return an error.</P></FONT></BODY>
+</HTML>

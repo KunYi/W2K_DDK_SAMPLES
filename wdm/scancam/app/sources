@@ -1,0 +1,28 @@
+!IF 0
+
+Copyright (C) Microsoft Corporation, 1997 - 1999
+
+Module Name:
+
+    sources.
+
+!ENDIF
+
+TARGETNAME=stillvue
+TARGETPATH=obj
+TARGETTYPE=PROGRAM
+
+
+UMENTRY=winmain
+UMBASE=0x01000000
+UMTYPE=windows
+
+INCLUDES=..\inc
+
+TARGETLIBS=$(SDK_LIB_PATH)\sti.lib
+
+SOURCES=stillvue.rc \
+        stillvue.cpp \
+        winx.cpp \
+        wsti.cpp
+

@@ -1,0 +1,13 @@
+
+TARGETNAME=kbdgr
+TARGETPATH=obj
+TARGETTYPE=DYNLINK
+
+!INCLUDE ..\sources.inc
+
+INCLUDES=..\inc
+
+SOURCES=kbdgr.c kbdgr.rc
+
+
+

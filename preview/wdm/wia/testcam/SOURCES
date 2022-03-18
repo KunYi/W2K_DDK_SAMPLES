@@ -1,0 +1,40 @@
+TARGETNAME=testcam
+TARGETPATH=obj
+TARGETTYPE=DYNLINK
+UMTYPE=windows
+DLLENTRY=DllEntryPoint
+NO_NTDLL=1
+
+DLLDEF=testcam.def
+
+USE_CRTDLL=1
+
+USER_INCLUDES=$(BASEDIR)\src\preview\wdm\wia\inc
+
+SOURCES= \
+        camevent.cpp \
+        camopen.cpp \
+        camxfer.cpp \
+        device.cpp \
+        miniitem.cpp \
+        testusd.cpp \
+        wiadev.cpp \
+        testusd.rc
+
+TARGETLIBS=$(TARGETLIBS) \
+           $(SDK_LIB_PATH)\kernel32.lib \
+           $(SDK_LIB_PATH)\advapi32.lib \
+           $(SDK_LIB_PATH)\user32.lib   \
+           $(SDK_LIB_PATH)\gdi32.lib    \
+           $(SDK_LIB_PATH)\ole32.lib    \
+           $(SDK_LIB_PATH)\uuid.lib     \
+           $(SDK_LIB_PATH)\oleaut32.lib \
+           $(SDK_LIB_PATH)\sti.lib      \
+           $(SDK_LIB_PATH)\wiaguid.lib  \
+           $(SDK_LIB_PATH)\wiaservc.lib \
+
+
+INCLUDES=..\..\inc;
+
+DLLBASE=0x01000000
+

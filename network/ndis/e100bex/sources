@@ -1,0 +1,36 @@
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+TARGETNAME=E100BEX
+
+# generate a .map file (useful for debugging under win9X)
+LINKER_FLAGS=-MAP
+
+TARGETLIBS=$(DDK_LIB_PATH)\ndis.lib
+
+C_DEFINES=$(C_DEFINES) -DNDIS50_MINIPORT=1 -DNDIS_MINIPORT_DRIVER=1
+
+DRIVER_ALIGNMENT=0x200
+
+INCLUDES=..\inc
+
+SOURCES=\
+    d100.c          \
+    send.c          \
+    interrup.c      \
+    routines.c      \
+    request.c       \
+    init.c          \
+    pci.c           \
+    parse.c         \
+    physet.c        \
+    eeprom.c        \
+    d100.rc         \
+    e100b.mof
+
+# set up for precompiled headers
+PRECOMPILED_INCLUDE=precomp.h
+PRECOMPILED_PCH=precomp.pch
+PRECOMPILED_OBJ=precomp.obj
+
+NTTARGETFILE0=e100bdat.h
+

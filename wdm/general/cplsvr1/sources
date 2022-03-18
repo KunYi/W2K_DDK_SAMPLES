@@ -1,0 +1,38 @@
+TARGETNAME=cplsvr1
+TARGETPATH=obj
+TARGETTYPE=DYNLINK
+
+DLLENTRY=DllMain
+
+
+TARGETLIBS= \
+           $(SDK_LIB_PATH)\uuid.lib     \
+           $(SDK_LIB_PATH)\dinput.lib   \
+           $(SDK_LIB_PATH)\kernel32.lib \
+           $(SDK_LIB_PATH)\user32.lib   \
+           $(SDK_LIB_PATH)\gdi32.lib    \
+           $(SDK_LIB_PATH)\advapi32.lib \
+           $(SDK_LIB_PATH)\comctl32.lib
+
+
+DLLDEF=CPLSVR1.DEF
+
+SOURCES=cplsvr1.rc    \
+        button.cpp    \
+        cplsvr1.cpp   \
+        dicputil.cpp  \
+        pages.cpp     
+
+
+USE_MFCSUNICODE=0
+USE_CRTDLL=0
+USE_CRTS=0
+USE_CRTDLL=0
+LINKER_STACKSIZE=-STACK:4096,1024
+
+!IFDEF TARGET_WIN95
+C_DEFINES=$(C_DEFINES) -DWIN95 -D_X86_
+!ELSE
+C_DEFINES=$(C_DEFINES) -DWINNT -D_UNICODE -DWINVER=0x0500
+!ENDIF
+

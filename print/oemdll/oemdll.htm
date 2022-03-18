@@ -1,0 +1,225 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>OEMDLL</TITLE>
+<META NAME="Template" CONTENT="C:\Program Files\Microsoft Office\Office\html.dot">
+</HEAD>
+<BODY TEXT="#000000" LINK="#0000ff" VLINK="#800080" BGCOLOR="#ffffff" leftmargin="8">
+
+<FONT FACE="Verdana"><H2><A NAME="MYSAMPLE">OEMDLL</H2>
+
+<P><span style="color:#FF0000;font-size:10pt;font-family:Arial">[This is preliminary documentation and subject to change.]</span></P> 
+
+<H3>SUMMARY</H3>
+</FONT><FONT FACE="Verdana" SIZE=2><P>The four samples demonstrate the use of COM OEM Printer Customization DLLs.  </P>
+<P>The OEMPS, OEMUI, and OEMUNI samples do not affect the printer output.  They are only examples of how to build OEM Customization DLLs of their respective types: PostScript rendering, User Interface, and Unidrv rendering modules. The OEMUI sample does demonstrate common UI tasks such as adding additional elements to the UI (that is, items and pages). These samples also demonstrate both User Mode and Kernel Mode COM OEM Printer Customization DLLs.</P>
+<P>The WaterMark sample demonstrates a PS OEM rendering module used in conjunction with a UI OEM module to produce customizable watermark page simulation by controlling PostScript injected in the printing stream by the PS OEM rendering module. The samples demonstrate the required COM interface, required functions with sample code, and how to use the OEM’s private DEVMODE section to communicate between the UI and rendering modules. </P>
+
+<H3>BUILDING THE SAMPLE</H3>
+<FONT FACE="Verdana" SIZE=2><P>This sample requires that the Microsoft&#174; Windows&#174; 2000 SDK and DDK be installed so that the required headers and libs are available.</P>
+
+<P>To build the samples, run <B>build</B> from this directory. The DLLs will be placed in the appropriate platform directory (that is, i386 or Alpha). To create a version with verbose debug output, add <B>_DEBUG</B> to the compile defines in the sources file.</P>
+
+<P>After building the samples, they may be installed by using the Add Printer Wizard. Select the local printer, then select <B>Have Disk</B>, and point to the directory containing the Oemdll.inf file. The Windows 2000 drivers do not need to be copied to the local directory containing Oemdll.inf.  <P>
+However, the Windows NT&#174; 4.0 printer driver files will either need to be copied to the local directory containing Oemdll.inf, or during installation, you will need to point to the location where these files may be found. For the kernel-mode samples to work, the kernel-mode drivers (the Windows NT 4.0 drivers) used most support COM OEM Printer Customization DLL extensions, while the driver files in Windows NT 4.0  Service Pack 4 and earlier do not.</P>
+
+<H3>CODE TOUR</H3>
+<H4>File Manifest</H4>
+</FONT><PRE><FONT FACE="Courier" SIZE=2>
+<FONT FACE="Verdana" SIZE=2><B>Root:</B></Font>
+
+<U>Files</u>         <U>Description</U>
+OEMdll.htm    The documentation for this sample (this file)
+Dirs          The file the lists the subdirectories to build
+OEMdll.inf    The printer INF that will install the OEM Customization samples once built
+OEMps.ini     The printer ini file that specifies the OEM Customization DLLs for the OEMPS sample
+OEMui.ini     The printer ini file that specifies the OEM Customization DLLs for the OEMUI sample
+OEMuni.ini    The printer ini file that specifies the OEM Customization DLLs for the OEMUNI sample
+Wmark.ini     The printer ini file that specifies the OEM Customization DLLs for the WaterMark sample
+Koemps.ini    The printer ini file that specifies the OEM Customization DLLs for the kernel mode OEMPS sample
+Koemuni.ini   The printer ini file that specifies the OEM Customization DLLs for the kernel mode OEMUNI sample
+OEM.gpd       The generic PCL5 GPD file for the samples that use Unidrv
+OEM.ppd       The generic PostScript PPD file for samples that use PostScript
+OEMPS         The directory that contains the OEMPS sample source code
+OEMUI         The directory that contains the OEMUI sample source code
+OEMUNI        The directory that contains the OEMUNI sample source code
+WaterMark     The directory that contains the WaterMark sample source code
+
+
+<FONT FACE="Verdana" SIZE=2><B>OEMPS directory:</B></FONT>
+
+<U>Files</u>         <U>Description</U>
+Dirs          The file the lists the subdirectories to build
+<FONT FACE="Courier">Sources.inc   The generic file for building the code sample
+Command.cpp   Source module for OEM customized Commands
+Command.h     The header for command.cpp
+DDIHook.cpp   Source module for functions that are hooked from the driver
+Debug.cpp     The code for debugging functions
+Debug.h       The header for debug.cpp
+Devmode.cpp   The code for the OEM Devmode functions
+Devmode.h     The header for devmode.cpp
+DLLEntry.cpp  Source module for DLL entry function
+Intrface.cpp  Source module that implements the OEM COM Printer Customization rendering interface
+Intrface.h    The header for Intrface.cpp
+Kmode.h       The header file that allows the source code to build a Kernel mode OEM DLL
+Oem.h         The header that contains common defines between the OEM UI and rendering modules
+Oemps.rc    	 The resource file for the rendering module
+Resource.h    The header for the rendering module’s resources
+Precomp.h     The header that includes the headers to precompile
+Umode         The directory that contains the User Mode-specific sources file
+Kmode         The directory that contains the Kernel Mode specific sources file
+
+OEMPS\UMode
+<U>Files</u>         <U>Description</U>
+Sources       The generic file for building the code sample for User Mode
+Makefile      The generic file for building the code sample
+Oemps.def   		The file that list the exported functions
+
+OEMPS\KMode
+<U>Files</u>         <U>Description</U>
+Sources       The generic file for building the code sample for Kernel Mode
+Makefile      The generic file for building the code sample
+Koemps.def  		The file that list the exported functions
+
+
+<FONT FACE="Verdana" SIZE=2><B>OEMUI directory:</B></FONT>
+
+<U>Files</u>         <U>Description</U>
+<FONT FACE="Courier">Sources       The generic file for building the code sample
+Makefile      The generic file for building the code sample
+Debug.cpp     The code for debugging functions
+Debug.h       The header for Debug.cpp
+Devmode.cpp   The code for the OEM Devmode functions
+Devmode.h     The header for Devmode.cpp
+DLLEntry.cpp  Source module for DLL entry function
+Globals.cpp   Source module that implements the global variables for the UI module
+Globals.h     The header for Globals.cpp
+OEMUI.cpp     Source module for the OEM code that customizes the Printer Properties UI
+OEMui.h       The header for OEMui.cpp
+Intrface.cpp  Source module that implements the OEM COM Printer Customization rendering interface
+Intrface.h    The header for Intrface.cpp
+Oemui.def     The file that list the exported functions
+Oemui.rc      The resource file for the rendering module
+Resource.h    The header for the rendering module’s resources.
+Precomp.h     The header that includes the headers to pre-compile.
+
+
+<FONT FACE="Verdana" SIZE=2><B>OEMUNI directory:</B></FONT>
+
+<U>Files</u>         <U>Description</U>
+Dirs          The file the lists the subdirectories to build
+SOURCES.INC   The generic file for building the code sample
+Command.cpp   Source module for OEM customized Commands
+Command.h     The header for command.cpp
+DDIHook.cpp   Source module for functions that are hooked from the driver
+Debug.cpp     The code for debugging functions
+Debug.h       The header for debug.cpp
+Devmode.cpp   The code for the OEM Devmode functions
+Devmode.h     The header for devmode.cpp
+DLLEntry.cpp  Source module for DLL entry function
+Intrface.cpp  Source module that implements the OEM COM Printer Customization rendering interface
+Intrface.h    The header for Intrface.cpp
+Kmode.h       The header file that allows the source code to build a Kernel mode OEM DLL
+Oem.h         The header that contains common defines between the OEM UI and rendering modules
+oemuni.rc     The resource file for the rendering module
+Resource.h    The header for the rendering module’s resources
+Precomp.h     The header that includes the headers to precompile
+Umode         The directory that contains the User Mode specific sources file
+Kmode         The directory that contains the Kernel Mode-specific sources file
+</FONT>
+
+OEMUNI\UMode
+<U>Files</u>         <U>Description</U>
+Sources       The generic file for building the code sample for User Mode
+Makefile      The generic file for building the code sample
+Oemuni.def   	The file that list the exported functions
+
+
+OEMUNI\KMode
+<U>Files</u>         <U>Description</U>
+Sources       The generic file for building the code sample for Kernel Mode
+Makefile      The generic file for building the code sample
+Koemuni.def  	The file that list the exported functions
+
+
+<FONT FACE="Verdana" SIZE=2><B>WaterMark directory:</B></FONT>
+
+<U>Files</u>         <U>Description</U>
+Dirs          The file the lists the subdirectories to build
+Common        The directory that contains common components between OEMPS and OEMPSUI modules
+WMARKPS       The directory that contains the PS WaterMark rendering module source code
+WMARKUI       The directory that contains the WaterMark UI module source code
+
+
+<FONT FACE="Verdana" SIZE=2><B>WaterMark\common directory:</B></FONT>
+
+<U>Files</u>         <U>Description</U>
+Debug.cpp     The code for debugging functions
+Debug.h       The header for debug.cpp
+Devmode.cpp   The code for the OEM Devmode functions
+Devmode.h     The header for devmode.cpp
+Kmode.h       The header file that allows the source code to build a Kernel mode OEM DLL
+Oem.h         The header that contains common defines between the OEM UI and rendering modules
+
+
+<FONT FACE="Verdana" SIZE=2><B>WaterMark\WMARKPS directory:</B></FONT>
+
+<U>Files</u>         <U>Description</U>
+Sources.inc   The generic file for building the code sample
+Command.cpp   Source module for OEM customized Commands
+Command.h     The header for command.cpp
+DLLEntry.cpp  Source module for DLL entry function
+Fdebug.cpp    Source module that includes debug.cpp from the common directory
+Fdevmode.cpp  Source module that includes devmode.cpp from the common directory
+Intrface.cpp  Source module that implements the OEM COM Printer Customization rendering interface
+Intrface.h    The header for Intrface.cpp
+Wmarkps.rc    The resource file for the rendering module
+Resource.h    The header for the rendering module’s resources
+Precomp.h     The header that includes the headers to pre-compile
+Drawmark.ps   The PostScript to inject at the start of each page to draw the water mark
+Wmark.ps      The PostScript to inject at the header of the document that defines how to draw the water mark
+Umode         The directory that contains the user-mode-specific sources file
+Kmode         The directory that contains the kernel-mode-specific sources file
+
+<B>Watermark\WMARKPS\UMode</B>
+<U>Files</u>         <U>Description</U>
+Sources       The generic file for building the code sample for User Mode
+Makefile      The generic file for building the code sample
+Wmarkps.def   The file that list the exported functions
+
+
+<B>Watermark\WMARKPS\KMode</B>
+<U>Files</u>         <U>Description</U>
+Sources       The generic file for building the code sample for kernel mode
+Makefile      The generic file for building the code sample
+Kwmarkps.def  The file that list the exported functions
+
+<FONT FACE="Verdana" SIZE=2><B>WaterMark\WMARKUI directory:</B></FONT>
+
+<U>Files</u>         <U>Description</U>
+Sources       The generic file for building the code sample
+Makefile      The generic file for building the code sample
+DLLEntry.cpp  Source module for DLL entry function
+Fdebug.cpp    Source module that includes debug.cpp from the common directory
+Fdevmode.cpp  Source module that includes devmode.cpp from the common directory
+Globals.cpp   Source module that implements the global variables for the UI module
+Globals.h     The header for Globals.cpp
+Wmarkui.cpp   Source module for the OEM code that customizes the Printer Properties UI
+Wmarkui.h     The header for Wmarkui.cpp
+Intrface.cpp  Source module that implements the OEM COM Printer Customization rendering interface
+Intrface.h    The header for Intrface.cpp
+Wmarkui.def   The file that list the exported functions
+Wmarkui.rc      The resource file for the rendering module
+Resource.h    The header for the rendering module’s resources
+Precomp.h     The header that includes the headers to pre-compile
+<P>
+</FONT><P ALIGN="CENTER"><A HREF="#top"><FONT FACE="Verdana" SIZE=2>Top of page</FONT></A><FONT FACE="Verdana" SIZE=2> </P></FONT>
+<TABLE CELLSPACING=0 BORDER=0 WIDTH=624>
+<TR><TD VALIGN="MIDDLE" BGCOLOR="#00ffff" HEIGHT=2>
+<P></TD>
+</TR>
+</TABLE>
+
+<FONT FACE="MS Sans Serif" SIZE=1><P>&copy; 1999 Microsoft Corporation</FONT><FONT FACE="Verdana" SIZE=2> </P></FONT></BODY>
+</HTML>

@@ -1,0 +1,7 @@
+LIBRARY		AC97prop.dll
+HEAPSIZE	8192
+
+EXPORTS
+	DllMain
+	AC97PropPageProvider
+

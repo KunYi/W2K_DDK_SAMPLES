@@ -1,0 +1,253 @@
+<!-- saved from url=(0022)http://internet.e-mail -->
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=us-ascii">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 9">
+<meta name=Originator content="Microsoft Word 9">
+<link rel=File-List href="./tools_files/filelist.xml">
+<title>Tools</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Dave Parsons</o:Author>
+  <o:LastAuthor>Dave Parsons</o:LastAuthor>
+  <o:Revision>5</o:Revision>
+  <o:TotalTime>396</o:TotalTime>
+  <o:Created>1999-11-18T21:20:00Z</o:Created>
+  <o:LastSaved>2000-06-29T19:23:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>423</o:Words>
+  <o:Characters>2416</o:Characters>
+  <o:Company>Microsoft Corp.</o:Company>
+  <o:Lines>20</o:Lines>
+  <o:Paragraphs>4</o:Paragraphs>
+  <o:CharactersWithSpaces>2967</o:CharactersWithSpaces>
+  <o:Version>9.3821</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:HideSpellingErrors/>
+  <w:HideGrammaticalErrors/>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:black;}
+h1
+	{margin-right:0in;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:1;
+	font-size:24.0pt;
+	font-family:"Times New Roman";
+	color:black;
+	mso-font-kerning:18.0pt;
+	font-weight:bold;}
+h2
+	{margin-right:0in;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:18.0pt;
+	font-family:"Times New Roman";
+	color:black;
+	font-weight:bold;}
+h3
+	{margin-right:0in;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:3;
+	font-size:13.5pt;
+	font-family:"Times New Roman";
+	color:black;
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{margin-right:0in;
+	mso-margin-top-alt:auto;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	color:black;}
+pre
+	{margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt;
+	font-size:10.0pt;
+	font-family:"Courier New";
+	mso-fareast-font-family:"Courier New";
+	color:black;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body bgcolor=white lang=EN-US link=blue vlink=blue style='tab-interval:.5in'
+leftmargin=8>
+
+<div class=Section1>
+
+<h1>Windows Image Acquisition Tools</h1>
+
+<h2>SUMMARY</h2>
+
+<p>This directory contains test tools for WIA.</p>
+
+<h2>CONTENTS</h2>
+
+<p>The following lists the contents of the WIA tools directory.</p>
+
+<h3>WIA Logging Configuration Tool</h3>
+
+<p>The executable Wialogcfg.exe can be used to set logging settings for WIA
+components and to view the WIA log file. (See the DDK documentation topic IWiaLog
+Interface for more information on writing log messages from your code.) When it
+is first started, the tool will show two entries under &#8220;Select a Module,&#8221;
+STICLI which is the class installer and STIMON, the event monitor. You should
+use the &#8220;Add a NEW Module&#8221; button to add WIASERVC and the name of your driver
+DLL without the file extension (e.g. WIATSCAN for the sample scanner).</p>
+
+<p>Use the &#8220;Select logging type&#8221; area to select the type of messages that are
+written to the log, trace, warning, or error messages. The choices under
+&#8220;Select a TRACE logging Detail LEVEL&#8221; can be used to further refine which trace
+messages are written. In your driver, you can use the trace levels in any
+manner you desire, but for the WIA components and the samples a convention has
+been set:</p>
+
+<table border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;
+ border:none;mso-border-alt:solid windowtext .5pt;mso-padding-alt:0in 5.4pt 0in 5.4pt'>
+ <tr>
+  <td valign=top style='border:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p><b>Level<o:p></o:p></b></p>
+  </td>
+  <td valign=top style='border:solid windowtext .5pt;border-left:none;
+  mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p><b>Description<o:p></o:p></b></p>
+  </td>
+ </tr>
+ <tr>
+  <td valign=top style='border:solid windowtext .5pt;border-top:none;
+  mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p align=center style='text-align:center'>1</p>
+  </td>
+  <td valign=top style='border-top:none;border-left:none;border-bottom:solid windowtext .5pt;
+  border-right:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;
+  mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>Entry and exit messages for important functions</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign=top style='border:solid windowtext .5pt;border-top:none;
+  mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p align=center style='text-align:center'>2</p>
+  </td>
+  <td valign=top style='border-top:none;border-left:none;border-bottom:solid windowtext .5pt;
+  border-right:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;
+  mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>All trace messages for important functions</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign=top style='border:solid windowtext .5pt;border-top:none;
+  mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p align=center style='text-align:center'>3</p>
+  </td>
+  <td valign=top style='border-top:none;border-left:none;border-bottom:solid windowtext .5pt;
+  border-right:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;
+  mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>Entry and exit messages for less important functions (e.g. helpers)</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign=top style='border:solid windowtext .5pt;border-top:none;
+  mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p align=center style='text-align:center'>4</p>
+  </td>
+  <td valign=top style='border-top:none;border-left:none;border-bottom:solid windowtext .5pt;
+  border-right:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;
+  mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p>All trace messages for less important functions</p>
+  </td>
+ </tr>
+</table>
+
+<p>&#8220;Select additional information&#8221; allows you to select what information to write
+for each message, time, module name, and/or thread ID.</p>
+
+<p>The three settings mentioned so far, logging type, additional information,
+and trace level, are kept on a per module basis. Each module can have its own
+settings for each area. After altering the settings for a module, you MUST use
+the &#8220;Write Settings&#8221; button to write the settings to the registry.</p>
+
+<p>&#8220;Select optional features&#8221; provides some special options for logging. You
+can only set the &#8220;Truncate on boot&#8221; or &#8220;Clear log file on boot&#8221; options for the
+WIASERVC module. &#8220;Log to Debugger&#8221; will write the messages to your debugger
+window. This is useful when you want to see a dynamic display of the messages.
+The &#8220;View Log&#8221; button does not provide a dynamically updated view of the log.
+However, the log file is useful for catching race conditions where the debugger
+output might alter the timing too much.</p>
+
+<p>IMPORTANT: Changes to the settings will not take affect immediately. You
+must stop the WIA service (&#8220;c:\windows\system\stimon &#8211;q&#8221;) and restart it
+(&#8220;c:\windows\system\stimon&#8221;).</p>
+
+<p>The &#8220;View Log&#8221; button will bring up a window displaying the log file. You
+can select &#8220;Color code log viewer text&#8221; to apply a different color to each of
+the different types of messages for easy identification, although it will take
+longer to display the log.</p>
+
+<h2>RESOURCES</h2>
+
+<p>WIA information: <a href="http://www.microsoft.com/hwdev/wia">http://www.microsoft.com/hwdev/wia</a></p>
+
+<p>DDK information: <a href="http://www.microsoft.com/ddk/">http://www.microsoft.com/ddk/</a></p>
+
+</div>
+
+</body>
+
+</html>

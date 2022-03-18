@@ -1,0 +1,651 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+
+<TITLE>DVDTS</TITLE>
+</HEAD>
+<BODY TEXT="#000000" LINK="#0000ff" VLINK="#800080" BGCOLOR="#ffffff" leftmargin="8">
+
+<FONT FACE="Verdana"><H2><A NAME="MYSAMPLE"></H2>
+<H2>DVDTS: DVD Decoder Card Driver</A></H2>
+<H3>SUMMARY</H3>
+</FONT><FONT FACE="Verdana" SIZE=2><P>DVD is a trademarked name owned by the DVD Consortium.
+DVD provides digital data storage that encompasses audio, video, and computer data.
+Microsoft supports DVD in the following ways: </P>
+<B><P>Support for DVD movie playback.</B> The DVD Consortium has defined two major
+ compression technologies to be used in storing video and audio on a DVD disc, MPEG2,
+  and AC-3. Support for these is the primary focus of this sample minidriver.</P>
+<B><P>Support for DVD as a storage device.</B> Microsoft DVD-ROM read-only device support,
+including support for the Universal Disc Format (UDF) version 1.01, is provided through
+installable file system drivers. This aspect of DVD technology is completely independent
+ of movie playback, side-stepping copyright protection and other such issues.
+ Future DVD standards will allow for recordable devices, opening a wider range of options.
+ As indicated in the following diagram, the OEM minidriver documented in this article is used
+ only for AC-3 video and MPEG2 video support; UDF support is provided by Microsoft.</P>
+<P>The diagram shows the complete support for existing DVD technologies under Microsoft&reg;
+ Windows&reg; and Windows NT&reg;. The white boxes represent software supplied by Microsoft,
+  while the shaded components are provided by hardware vendors. The ovals represent hardware
+  supplied by independent hardware vendors (IHVs) and OEMs. On most PCs with Microsoft DVD
+   support, DVD works as a storage device and, if the proper decoding hardware is present,
+    supports full DVD-video playback.</P>
+<P>&nbsp;</P>
+</FONT><P><IMG SRC="dvdts.gif" WIDTH=567 HEIGHT=437></P>
+<B><FONT FACE="Verdana" SIZE=2><P>Note:</B> Some components in this architecture will change
+ based on advances in other hardware technologies, such as the advent of accelerated graphics
+  port (AGP) or improvements in the PCI bus. The only components that will always be present
+  are the DVD-ROM driver, the UDF file system, and the DVD Splitter/Navigator.</P>
+<P>The sample this article explores, <B>DvdTs.sys</B>, is an example of a real OEM minidriver
+(as indicated in the gray Minidriver box in the above diagram) for a Toshiba&reg; DVD decoder
+card. The sample includes an .inf file that installs <B>DvdTs.sys</B> to replace
+the core <B>TosDvd.sys</B> files in Windows 98 and Windows 2000 (<B>DvdTs.sys</B>
+ is functionally equivalent to <B>TosDvd.sys</B>). At the time of this writing,
+ some DVD movie
+  copy protection support was not yet fully implemented in Windows 2000.</P>
+<B><P>DvdTs</B> demonstrates the use of WDM Kernel Streaming services to support
+high-performance video/audio playback. A low-level Toshiba proprietary decoder
+hardware support library, <B>DvdTDCod.lib,</B> is supplied with the DDK in binary form only,
+ but Toshiba has permitted us to publish all the source code that demonstrates the
+ architecture of an OEM MPEG2/AC-3 DVD minidriver and its interaction with Microsoft
+ kernel streaming services.</P>
+
+</FONT><FONT FACE="Verdana"><H3>BUILDING THE SAMPLE</H3>
+</FONT><FONT FACE="Verdana" SIZE=2><P>The sample is built with the standard DDK BUILD
+utility in the standard checked or free DDK build environment. The Sources file links
+ to a special library,<B> DvdTDCod.lib</B>, supplied with the DDK in binary form only,
+  that encapsulates Toshiba proprietary decoder hardware-specific register definitions
+   and low-level support routines. These would vary with each OEM's hardware.</P>
+<P>An installation file, <B>DvdTs.inf</B>, is provided. DvdTs.sys may be installed by
+creating an OEM Installation Directory containing the DvdTs.sys binary and DvdTs.inf.
+On machines with Toshiba DVD players, Windows 98 or Windows 2000 will have
+already installed the default core OS driver, TosDvd.sys. Simply go into Device
+Manager properties for Toshiba DVD Decoder Card Driver, hit the <B>Update Driver</B> button, and then specify your install directory containing DvdTs.inf and DvdTs.sys.</P>
+<P>The DvdTs.sample is completely contained in one directory. There is no special
+ test application; just install the new driver and start watching a movie. Note that
+  DvdTs will only be started for DVD playback; if a standard CD-ROM or audio CD is
+  put in the DVD drive, DvdTs (or TosDvd in the default OS environment) will <I>not</I> be
+   started; a different minidriver module for CD-ROM or audio will be loaded by the OS.</P>
+   
+</FONT><FONT FACE="Verdana"><H3>RESOURCES</H3>
+
+</FONT><FONT FACE="Verdana" SIZE=2><P>Check the DDK documentation in <b>DVD Driver
+ Model Design Notes</b> in the WDM DDK documentation for more general discussion of DVD
+ architecture, particularly as it relates to Microsoft DirectShow&reg; and other Microsoft
+ multimedia technologies.</P>
+<P>For background on WDM streaming architecture, see <b>Kernel-Mode Streaming Reference</b>
+and the <b>Stream Class Driver Reference</I> in the DDK documentation.</b>
+</FONT><FONT FACE="Verdana"><H3>CODE TOUR</H3>
+<H4>File Manifest</H4>
+<P><! ---------------- Snip Snip ---------------- ></P>
+</FONT><U><PRE>File          Description
+</U>DvdTs.htm     The documentation for this sample (this file).
+<FONT FACE="Courier">SOURCES       The generic file for building the code sample.
+DvdTs.inf     The .inf file for installing the code sample.
+Debug.h       Header for debug output routines for debug-only build.
+Debug.c       Debug output routines for debug-only build.
+Que.h         Header for stream request-queuing routines.
+DevQue.c      Source code for stream request-queuing routines.
+Dvd.rc        Used to store version information.
+DvdCmd.c      Main command processing module; set/get device KS_ properties.
+DvdCmd.h      Function prototypes for DvdCmd.c.
+DvdInit.c     Contains DriverEntry(), other device initialization code.
+DvdInit.h     Driver extension definition, various other structures and prototypes.
+DvdIrq.c      Device hardware interrupt logic.
+Makefile      Standard DDK build environment makefile.
+DvdTDcod.h    Header for DvdTDcod.lib, Toshiba-proprietary hardware routines.
+Strmid.h      Stream, property, and other KS_ kernel streaming descriptors and definitions.
+</FONT><FONT FACE="Verdana"> </PRE>
+<! ---------------- End, Snip Snip ---------------- >
+
+
+</FONT><H3>Programming Tour</H3>
+<FONT FACE="Verdana" SIZE=2><P>
+WDM streaming enables more efficient data streaming by requiring
+fewer transitions between user and kernel modes. In this sample, all streaming is in kernel mode,
+the source is a DVD disk,
+the video decoder is MPEG2, and the audio  decoder is either MPEG audio, AC-3, or nonexistent
+ if the disk contains PCM audio.
+  </FONT><FONT SIZE=2>. </P>
+  
+</FONT><FONT FACE="Verdana" SIZE=2><P>
+Video data from a DVD disk is accessed via the
+ UDF file system on command from the ActiveMovie file reader. The DVD stream is then
+ split into its components, and the MPEG video data is routed to an ActiveMovie
+ decoding filter. The data is then sent to hardware via a streaming WDM class driver
+  miniport specific to the MPEG video decoding hardware. The output of the decoding
+  hardware is sent directly to the frame buffer of the graphics card via a streaming
+  WDM interface using the Video Port extensions of Microsoft DirectDraw&reg;.
+  </P>
+  
+<P>The configuration for audio decoding is basically the same.
+ AC-3 audio is split out by the DVD splitter and then passed to AC-3 decoder hardware
+ via a streaming WDM miniport of the AC-3 class driver. The output of the hardware
+  decoder (multichannel audio) is passed to a WDM streaming driver for the audio card.
+  The transport for the data movement is decided on by the WDM mechanism.
+  This particular driver is not even loaded by the OS for standard audio or data CD playback.
+  You will not see DvdTs activated until a DVD disk is inserted in the drive.
+  </P>
+  
+<P>The Toshiba decoder card is a multifunction card with both video and audio decoding on the same physical card.
+
+At run time, a stream is a set of entry points into the driver that can receive or return sequential
+ packets of related data. For example, a DVD driver might have the following streams: video
+  in, video out, audio in, audio out, subpicture in, close captioning out. If the driver were
+   viewed as a component in a data flow diagram, each stream would correspond to a data line
+    going into or coming out of the driver.</P>
+<P>A driver supports a fixed number of streams. At run time, the system can ask the driver
+to instantiate any of its streams. Theoretically, a driver can allow the system to instantiate
+ a stream more than once, if the hardware is capable of handling multiple parallel streams of
+ that type of data. However, most current DVD decoders can only support one instance of each
+  stream. When a stream is opened, some structures are created to represent the stream.
+  Pointers to these structures are then passed around between the driver and the system,
+   so that the driver code knows which stream it is being executed for.</P>
+
+<B>DriverEntry()</B> is the initial entry point into the driver called by the I/O subsystem. 
+A stream class client minidriver's DriverEntry() routine has two main functions to perform: <br>
+<br> <B>1)</B> Allocate and fully initialize a <B>HW_INITIALIZATION_DATA </B> structure, and
+<br><B> 2)</B> call
+ <B>StreamClassRegisterDriver() </B>with that structure and the DriverObject and RegistryPath
+  passed into DriverEntry() as input parameters . <br><br>
+  The following is a description of the fields in HW_INITIALIZATION_DATA  
+that must be filled out. All others not used must be zero-initialized. <P>
+
+
+ The first group are entry points for the mini Driver.  All entry routines will be called
+ at High priority.  If the driver has a task that requires a large amount
+ of time to accomplish (e.g. double buffer copying of large amounts of
+ data) The driver should request a callback at lower priority to perform the
+ desired function.  Synchronization and re-entrancy issues are discussed later.  
+
+ <p> The <B>HwInterrupt</B> field is set to the minidriver's main interrupt service routine.
+ If there is no such routine, the field must be set to NULL.
+  </p>
+
+<P><PRE><FONT FACE="Courier">
+        HwInitData.HwInterrupt = (PHW_INTERRUPT)HwInterrupt;  // ISR  routine
+ </FONT></PRE></P>
+
+ The <B>HwReceivePacket</B> field describes the entry point for receiving an SRB
+ Request from the stream class driver that is a request to the adapter, as
+ opposed to the stream based request handlers that are initialised in the
+ OpenStream function
+
+<P><PRE><FONT FACE="Courier">
+        HwInitData.HwReceivePacket = AdapterReceivePacket;
+</FONT></PRE></P>
+
+<B>AdapterReceivePacket()</B> is the main entry point used by the system to communicate with the driver after it is initialized. 
+When the system calls AdapterReceivePacket(), it passes it a pointer to an SRB (stream request block)
+ structure. This structure (full name: <B>HW_STREAM_REQUEST_BLOCK</B>) is defined in strmini.h and
+ contains information that tells the driver what is being requested. One of the members is an
+ integer SRB ID, which tells the driver what type of request this is. 
+Some of the many SRB request types are described below.
+
+<P>&#9;<B>SRB_INITIALIZE_DEVICE</B> – The system is asking the driver to initialize its hardware
+.</P>
+<P>&#9;<B>SRB_UNINITIALIZE_DEVICE </B>– The system is asking the driver to uninitialize
+its hardware.</P>
+<P>&#9;<B>SRB_GET_STREAM_INFO</B> – The system is asking the driver to fill a supplied
+ buffer with information about all the streams it supports. The buffer is essentially
+  an array of HW_STREAM_INFORMATION structures (also defined in strmini.h),
+   one for each stream. The HW_STREAM_INFORMATION structure contains pointers to other 
+structures (declared statically in the driver) that provide more information
+about the stream, such as stream property set, etcetera.</P>
+<P>&#9;<B>SRB_OPEN_STREAM</B> – The system is asking the driver to instantiate
+one of its streams. Another member of the SRB structure specifies the stream number.
+Similarly to DriverEntry(), the handler of SRB_OPEN_STREAM must fill a supplied buffer
+ with some information and a few function pointers to functions that will handle the
+ stream.</P>
+<P>&#9;<B>SRB_CLOSE_STREAM</B> – The system is asking the driver to close a stream.
+ The structures associated with the stream are destroyed after this call completes.</P>
+<P>&#9;</P>
+
+ The <B>HwCancelPacket</B> entry is used to cancel any packet the minidriver may
+ currently have outstanding.  This could be a stream, or an adapter based
+ request.  This routine will only be called under extreme circumstances, when
+ an upper layer is attempting to recover and packets are considered lost.
+
+<P><PRE><FONT FACE="Courier">
+        HwInitData.HwCancelPacket = AdapterCancelPacket;
+</FONT></PRE></P>
+
+ The <B>HwRequestTimeoutHandler</B> entry is used when a packet times out.  Again,
+ This could be a packet for the device, or a stream based packet.  This is
+ not necessarily an error, and it is up to the  minidriver to determine what
+ to do with the packet that has timed out.
+
+<P><PRE><FONT FACE="Courier">
+        HwInitData.HwRequestTimeoutHandler = AdapterTimeoutPacket;
+</FONT></PRE></P>
+
+
+ <p>Next we must define for the class driver the sizes for data structure extensions
+ defined by this driver in dvdinit.h.</p>
+
+ The <B>DeviceExtensionSize</B> member specifies the size in bytes required by
+ the adapter minidriver for its device extension. This storage is used by
+  the adapter minidriver to hold per-adapter information. A pointer to this
+  storage is supplied with every call to the adapter minidriver. 
+ 
+<P><PRE><FONT FACE="Courier">
+        HwInitData.DeviceExtensionSize = sizeof(HW_DEVICE_EXTENSION);
+</FONT></PRE></P>
+
+ <B>PerRequestExtensionSize</B> specifies the number of bytes of extra workspace needed
+  for each request by the minidriver. The stream class will allocate whatever extension
+   size is requested here. 
+
+<P><PRE><FONT FACE="Courier">
+        HwInitData.PerRequestExtensionSize = sizeof(SRB_EXTENSION);
+</FONT></PRE></P>
+
+<B>PerStreamExtensionSize</B> specifies the number of bytes of extra workspace needed
+ for each stream information structure by the minidriver. Whenever a new stream is opened,
+  the stream class will allocate whatever extension size is specified in this member. 
+
+<P><PRE><FONT FACE="Courier">
+        HwInitData.PerStreamExtensionSize = sizeof(STREAMEX);
+</FONT></PRE></P>
+
+<B>FilterInstanceExtensionSize</B> is the number of bytes of workspace needed for each instance extension.
+Usually set to zero except for hardware that can support multiple instances of the reported
+streams on the same adapter. This is not supported in this case.
+ 		
+ <P><PRE><FONT FACE="Courier">
+        HwInitData.FilterInstanceExtensionSize = 0;
+</FONT></PRE></P>
+
+
+ The <B>BusMasterDMA</B> field indicates to the system that the memory pointers passed
+ in to the mini driver in the data packets may be used for direct Bus Master DMA
+ access.  If the mini driver uses a translation buffer (to ensure minimum DMA
+ size, or correct buffer alignment), this BOOLEAN should be set to FALSE.
+
+ <P><PRE><FONT FACE="Courier">
+	HwInitData.BusMasterDMA = TRUE;
+</FONT></PRE></P>
+
+
+ The <B>Dma24BitAddresses</B> field indicates a device that uses DMA that only can
+ access the lower 24bits of the 32 bit address space.  Again, this should only
+ be set to true if the minidriver is going to be doing DMA directly to the buffer
+ passed in the data packets, and not through a double buffer scenario.
+
+ <P><PRE><FONT FACE="Courier">
+	HwInitData.Dma24BitAddresses = FALSE;
+	HwInitData.BufferAlignment = 4;
+</FONT></PRE></P>
+
+
+ If the <B>TurnOffSynchronization</B> field is set to FALSE, the mini driver may never
+ be re-entered. Under these conditions, if the mini-driver uses a DISPATCH or lower priority
+ callback routine, the miniDriver must disable any interrupts that it might
+ receive.  If an interrupt controlled by the driver is received while code in
+ the mini driver is running at DISPATCH or lower priority, the interrupt will
+ be LOST.  If an interrupt is received while at HIGH priority, it will be queued
+ until the code in the driver is finished.
+ If the TurnOffSynchronization field is set to TRUE, the mini-driver must be
+ fully capable of handling multi-processor and single processor re-entrancy
+
+ <P><PRE><FONT FACE="Courier">
+	HwInitData.TurnOffSynchronization = FALSE;
+</FONT></PRE></P>
+
+
+ The <B>DmaBufferSize</B> specifies the size of the single contiguous region of
+ physical memory that the driver needs at hardware intialization time.  The
+ memory will be returned to the driver when the driver makes the
+ StreamClassGetDmaBuffer call.  It is important to use as little physical
+ buffer as possible here, as this will be locked physical memory that is
+ unavailable to the sytem, even when the streaming class mini driver is not
+ in use.
+
+ <P><PRE><FONT FACE="Courier">
+	HwInitData.DmaBufferSize = DMASIZE;
+</FONT></PRE></P>
+
+    
+     Finally, DriverEntry() must attempt to register with the streaming class driver,
+	 passing on the DriverObject and RegistryPath parms as well as a pointer to
+	 the fully initialized <B>HW_INITIALIZATION_DATA </B> structure
+	 
+ <P><PRE><FONT FACE="Courier">
+ 	ntStatus = (
+		StreamClassRegisterMinidriver(
+			(PVOID)DriverObject,
+			(PVOID)RegistryPath,
+			&HwInitData )
+	);
+</FONT></PRE></P>
+
+	<B> Note,</B> this will result in calls to our own driver-defined hardware initialization routines.
+	 This occurs when StreamClassRegisterMinidriver() makes a call to our driver's
+AdapterReceivePacket() routine with a stream request type of <B>SRB_INITIALIZE_DEVICE</B>.
+Before completing initialization,  the driver must obtain and save some PCI configuration
+space information,and this cannot be done at elevated IRQL, so the stream class API
+ <B>StreamClassCallAtNewPriority()</B> is used to schedule a low priority callback to do
+ the main work.  Processing will continue when this runs.
+ 
+ <P><PRE><FONT FACE="Courier">
+ 
+        StreamClassCallAtNewPriority(
+            NULL,
+            pSrb->HwDeviceExtension,
+            Low,                                         // priority level to drop to
+            (PHW_PRIORITY_ROUTINE) GetPCIConfigSpace,    // driver-defined routine to call while there
+            pSrb
+            );
+
+</FONT></PRE></P>
+    
+	In DvdTs, the GetPCIConfigSpace() function, besides calling <B>StreamClassReadWriteConfig()</B>
+	to save needed PCI configuration information also in turn makes another call to
+	StreamClassCallAtNewPriority(), this time requesting a boost back to high priority for the
+	 rest of hardware initialization to proceed.
+	 
+ <P><PRE><FONT FACE="Courier">
+	
+        StreamClassCallAtNewPriority(
+            NULL,
+            pSrb->HwDeviceExtension,
+            LowToHigh,                                  // priority level to raise to
+            (PHW_PRIORITY_ROUTINE) InitializationEntry, // driver-defined routine to call while there
+            pSrb
+            );
+	
+</FONT></PRE></P>
+	
+StreamClassCallAtNewPriority() is frequently used by stream class minidrivers for synchronization,
+ since, as noted earlier,all minidriver entry points are called at high priority.
+ The new priorities that can be specified are as follows:
+
+
+<P><BR><B>High </B>
+Priority at which the minidriver's functions are typically called. If the minidriver
+ has scheduled a DISPATCH_LEVEL priority call and needs
+to return to high priority, this priority should be specified. For example,
+if the minidriver has disabled its adapter interrupts and scheduled a DispatchPriority
+event, the minidriver should schedule a HighPriority event from the DispatchPriority event,
+ and re-enable card interrupts when the specified HighPriority entry point is called.
+ Doing so will avoid reentrancy in the minidriver. 
+<P><BR><B>Dispatch</B> 
+Priority used to specify when additional processing will take less than 1 millisecond.
+ The adapter should not interrupt after this notification call is made, so interrupts
+ should be disabled on the card before specifying this call, or the minidriver's ISR
+  will be re-entered. If the ISR was coded to be reentrant with the Dispatch routine,
+  this condition is acceptable, as long as the ISR does not call any stream class services. 
+<P><BR><B>Low</B> 
+Priority used to specify when additional processing will take more than 1 millisecond.
+The adapter should not interrupt after this notification call is made, so interrupts
+should be disabled on the card before specifying this call, or the minidriver's ISR
+ will be re-entered. Additionally, any of the minidriver's request functions and any
+ scheduled timers will re-enter the minidriver when this priority is scheduled. 
+<B>Note</B>  If the minidriver has left synchronization enabled
+ (the TurnOffSynchronization boolean in the HW_INITIALIZATION_DATA structure was set to FALSE)
+ no stream class driver services can be called by a low priority thread except from
+ StreamClassCallAtNewPriority with LowToHigh. 
+
+<P><BR><B>LowToHigh </B>
+Priority used to allow a thread called at low priority to return to high priority,
+so other stream class driver services can be called. 
+
+<H3>Header Definition Tour</H3>
+
+For a stream class minidriver, the static definitions in the mindriver's stream definition
+header
+ file ( in this sample it is <B>strmid.h</B> )  are as important ( and sometimes nearly as
+  large in size! ) as the supporting code.
+
+DVD minidrivers support both input and output data streams.
+Streams are uniquely defined by three GUIDs (major type, minor type, and specifier)
+and a format block. Stream formats are also referred to as media types. See DirectShow™
+in the Platform SDK, Graphics and Multimedia Services, DirectX Media SDK directories,
+and the Kernel-Mode Streaming Reference for more information on media types and format blocks.
+
+The reader is strongly encouranged to closely examine strmid.h to see how four key concepts 
+are used to build a substantial static definition of exactly how the adapter serviced by this
+minidriver behaves, allowing most of the coding details to be handled by the stream class driver.
+ <br><br>
+ <B>1) Data Formats</B>, identified by <B>KSDATAFORMAT</B> structures in strmid.h,
+for example:
+ <P><PRE><FONT FACE="Courier">
+/*
+ Define the Mpeg2Video format that the minidriver supports
+ */
+KSDATAFORMAT hwfmtiMpeg2Vid
+     = {
+	sizeof (KSDATAFORMAT),
+	0, //flags, not used here
+	0, //sample size, not used here
+	0, // reserved
+	//
+	// specify media type, subtype, and format from mpeg2 video
+	//
+    STATIC_KSDATAFORMAT_TYPE_DVD_ENCRYPTED_PACK,
+	STATIC_KSDATAFORMAT_SUBTYPE_MPEG2_VIDEO,
+	STATIC_KSDATAFORMAT_SPECIFIER_MPEG2_VIDEO
+	};
+</FONT></PRE></P>
+
+In Dvdts, analogous structures are defined for AC3 audio and LCPM audio, Sub Picture format,
+Close Caption format, Video Port Extensions (VPE),  as well as MPEG2 Video. See strmid.h.
+<br> <br>
+
+ <B>2) Property Sets</B>, identified by <B>KSPROPERTY_ITEM</B> structures 
+ built up into  <B>KSPROPERTY_SET</B>arrays  in strmid.h, for example:
+ 
+ <br> <br>
+
+ <P><PRE><FONT FACE="Courier">
+// Video
+
+static const KSPROPERTY_ITEM mpegVidPropItm[]={
+	{KSPROPERTY_DVDSUBPIC_PALETTE,
+	FALSE,
+	sizeof(KSPROPERTY),
+	sizeof(KSPROPERTY_SPPAL),
+	(PFNKSHANDLER) FALSE,
+	NULL,
+	0,
+	NULL,
+	NULL,
+	0
+	}};
+
+// Audio
+
+static const KSPROPERTY_ITEM audPropItm[] = {
+
+    {KSPROPERTY_AUDDECOUT_MODES,// available audio decoder output formats
+        // property
+        (PFNKSHANDLER) TRUE,    // get available modes is supported
+        sizeof(KSPROPERTY),
+        sizeof(ULONG),          // minimum size of data requested
+        (PFNKSHANDLER) FALSE,   // set available modes is not supported
+        NULL,
+        0,
+        NULL,
+        NULL,
+        0
+    },
+
+    {KSPROPERTY_AUDDECOUT_CUR_MODE, // current audio decoder output format
+        // property
+        (PFNKSHANDLER) TRUE,    // get current mode is supported
+        sizeof(KSPROPERTY),
+        sizeof(ULONG),          // minimum size of data requested
+        (PFNKSHANDLER) TRUE,    // set current modes is supported
+        NULL,
+        0,
+        NULL,
+        NULL,
+        0
+    }
+};
+
+// Sub-pic
+
+static const KSPROPERTY_ITEM spPropItm[]={
+
+	{KSPROPERTY_DVDSUBPIC_PALETTE,
+	FALSE,
+	sizeof (KSPROPERTY),
+	sizeof (KSPROPERTY_SPPAL),
+	(PFNKSHANDLER) TRUE,
+	NULL,
+	0,
+	NULL,
+	NULL,
+	0
+	},
+	.
+	.
+	.
+
+</FONT></PRE></P>
+
+The above appear later in strmid.h as members of property set arrays, e.g.:
+
+ <P><PRE><FONT FACE="Courier">
+static /* const*/ KSPROPERTY_SET mpegVidPropSet[] = {
+	{
+		&KSPROPSETID_Mpeg2Vid,
+		SIZEOF_ARRAY(mpegVidPropItm),
+		(PKSPROPERTY_ITEM)mpegVidPropItm
+	},
+	{
+		&KSPROPSETID_CopyProt,
+		SIZEOF_ARRAY(cppPropItm),
+		(PKSPROPERTY_ITEM)cppPropItm
+	},
+	{
+		&KSPROPSETID_TSRateChange,
+		SIZEOF_ARRAY(RateChangePropItm),
+		(PKSPROPERTY_ITEM)RateChangePropItm
+	},
+	.
+	.
+
+};
+</FONT></PRE></P>
+
+Numerous other properties and property sets are defined for DvdTs in Strmid.h
+
+<br><br>
+<B> 3) Connection Topology</B><BR> describing how we will interact with the outside world
+via  KSProxy and DirectShow.
+
+ <P><PRE><FONT FACE="Courier">
+
+static const KSTOPOLOGY_CONNECTION Connections[] = {
+/*  FromNode          FromPin           ToNode          ToPin          */
+   {(ULONG)-1,        strmVideo,        (ULONG)-1,      strmCCOut},
+   {(ULONG)-1,        strmVideo,        (ULONG)-1,      strmYUVVideo},
+   {(ULONG)-1,        strmSubpicture,   (ULONG)-1,      strmYUVVideo}
+};
+
+static const KSTOPOLOGY Topology = {
+	1,
+	(GUID *) & KSCATEGORY_DATADECOMPRESSOR,
+	0,
+	NULL,
+   SIZEOF_ARRAY (Connections),
+   Connections
+};
+
+</FONT></PRE></P>
+
+In the WDM Streaming architecture, a filter is a kernel-mode driver, such as DvdTs, that can be
+ associated with a piece of hardware, though this is not a requirement. Each filter's
+  capability is partly described by a number of connection points called pins. Each pin
+  can consume, produce, or both consume and produce a data stream. More specialized tasks
+   can be accomplished by connecting several filters together using these pins. For example,
+    a series of filters could be connected to play filtered and mixed audio.
+The characteristics of a pin or a filter are described by property sets.
+These sets can describe, for example, the number of connections available,
+ the type of data required, and in which direction the data flows.
+The WDM Streaming architecture also provides mechanisms for controlling and querying
+filters by clients or other filters. These mechanisms include, for example, retrieving
+the volume level of an audio filter or starting playback of a video stream. Specific
+implementations of these mechanisms, such as an interface for passing coefficients to
+a low-pass audio filter, are also provided.
+ 
+
+<br><br>
+
+<B> 4) Event Sets</B><BR> describing important transitions, notifications, and clock events,
+built up of various <B>KSEVENT_ITEM</B> structs into <B>KSEVENT_SET</B> arrays.
+An event set for a particular minidriver is a uniquely identified set that represents
+ a group of items about which a client, such as the user mode Dvd player application, can be notified. 
+
+ <P><PRE><FONT FACE="Courier">
+
+KSEVENT_ITEM VPEventItm[] =
+{
+	{
+		KSEVENT_VPNOTIFY_FORMATCHANGE,
+		0,
+		0,
+		NULL,
+		NULL,
+		NULL
+	}
+};
+
+GUID MY_KSEVENTSETID_VPNOTIFY = {STATIC_KSEVENTSETID_VPNotify};
+
+KSEVENT_SET VPEventSet[] =
+{
+	{
+		&MY_KSEVENTSETID_VPNOTIFY,
+		SIZEOF_ARRAY(VPEventItm),
+		VPEventItm,
+	}
+};
+
+KSEVENT_ITEM ClockEventItm[] =
+{
+	{
+        KSEVENT_CLOCK_POSITION_MARK,		// position mark event supported
+		sizeof (KSEVENT_TIME_MARK),			// requires this data as input
+		sizeof (KSEVENT_TIME_MARK),			// allocate space to copy the data
+		NULL,
+		NULL,
+		NULL
+	},
+	{
+		KSEVENT_CLOCK_INTERVAL_MARK,		// interval mark event supported
+		sizeof (KSEVENT_TIME_INTERVAL),		// requires interval data as input
+		sizeof (MYTIME),					// we use an additional workspace of
+											// size longlong for processing
+											// this event
+		NULL,
+		NULL,
+		NULL
+	}
+};
+
+KSEVENT_SET ClockEventSet[] =
+{
+	{
+		&KSEVENTSETID_Clock,
+		SIZEOF_ARRAY(ClockEventItm),
+		ClockEventItm,
+	}
+};
+
+</FONT></PRE></P>
+
+<br><br>
+
+
+<P>Comments in the sample give more information about some of these structures and
+functions. Please also examine the LuxTs example also included in the DVD section of the DDK.</P>
+</FONT><P ALIGN="CENTER"><A HREF="#top"><FONT FACE="Verdana" SIZE=2>Top of page</FONT></A><FONT FACE="Verdana" SIZE=2> </P></FONT>
+<TABLE CELLSPACING=0 BORDER=0 WIDTH=624>
+<TR><TD VALIGN="MIDDLE" BGCOLOR="#00ffff" HEIGHT=2>
+<P></TD>
+</TR>
+</TABLE>
+
+<FONT FACE="MS Sans Serif" SIZE=1><P>&copy; 1999 Microsoft Corporation</FONT><FONT FACE="Verdana" SIZE=2> </P></FONT></BODY>
+</HTML>

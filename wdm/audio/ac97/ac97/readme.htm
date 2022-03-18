@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-
+1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>AC97</TITLE>
+</HEAD>
+<BODY LINK="#0000ff">
+
+<FONT FACE="Verdana" SIZE=5><H2>AC97 WDM Sample Driver</H2>
+</FONT><FONT FACE="Verdana" SIZE=2>
+<P><span style="color:#FF0000;font-size:10pt;font-family:Arial">[This is preliminary 
+documentation and subject to change.]</span></P>
+
+<H3>SUMMARY</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+This sample driver demonstrates the basics of writing a
+WDM audio driver, and can be used as a base to write your own WDM driver. The sample driver should work with any AC97 codec connected to 
+an Intel&#174; motherboard with integrated AC97 controller, like the Intel 810 Chipset.<P>
+
+Its functionality may be expanded
+for non-AC97 design features or to convert the driver to use a different DMA engine. For more information, please see the "Driver Issues" section below. <P>  
+
+<H3>BUILDING THE SAMPLE</H3></FONT><FONT FACE="Verdana" 
+SIZE=2><P>
+To build this sample, enter the free or checked build environment and run <B>build</B> from the Audio parent directory, rather than the Ac97 subdirectory. This sample links with Stdunk.lib, which is also built if you run build from Audio.<P>
+
+The .inf included in the Ac97 subdirectory (Ac97smpl.inf) can be used to install the sample driver after it has been built.  Simply copy the .inf and the driver binary to a floppy disk and the update the driver for the device with the one from the floppy. <P>
+
+Once the driver has been installed with the .inf, 
+the driver may be updated by copying the binary into \\Winnt\System32\Drivers on the target machine and rebooting to test the new driver, provided that there are no .inf
+changes.<p>
+
+<H3>DRIVER ISSUES</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+1. At the time of writing, there is no AC97 implementation available for Alpha machines&#151;therefore, the DDK sample source does not install on Alpha machines.
+<p>
+2. This driver supports the old Intel 810/820/840 implementation as well as the new Intel 820 implementation (82801BA/BAM). This new chipset supports multichannel AC97 codecs, but the sample driver will only run satisfying with 100% AC97 compatible codecs. The double rate playback (96KHz, for example) feature is still unsupported. The sample driver could be expanded to use this feature, but at this time, there is no hardware available with this feature.
+<p>
+3. The AC97 low-priority Microphone capability is disabled. You can record using Microphone as you would record from any other source (for example, a CD) using the normal recording selector, but the second recording line that is optionally defined in the AC97 specification is disabled.
+<p>
+4. The AC97 inputs reported to the operating system may be disabled through the .inf. The .inf has a section where you can disable
+specific input lines of the codec that are not attached to any adapters.
+<p>
+5. This driver works with Microsoft® Windows® 2000 (or higher) and Microsoft® Windows® 98 Second Edition (or higher) only. It will neither run nor install on the original release of Microsoft® Windows® 98. 
+<H3>CODE TOUR</H3>
+<H4>File Manifest</H4>
+</FONT><U><PRE>File&#9;&#9;Description
+</U>
+Ac97reg.h   &#9;Definition of the AC97 registers
+Ac97smpl.inf&#9;Setup information
+Ac97smpl.rc &#9;Resource file containing version information
+Adapter.cpp &#9;Connects driver with the system
+Adapter.h   &#9;Header file for adapter.cpp
+Common.cpp  &#9;Common object used by all miniports
+Common.h    &#9;Header file for the common object
+Debug.h     &#9;Debug output support
+Guids.h     &#9;Private GUIDs used by the driver (like name definitions)
+Ichreg.h    &#9;Defines the registers of the INTEL AC97 interface (ICH)
+Ichwave.cpp &#9;Implementation of the stream object (DMA programming)
+Ichwave.h   &#9;Header file for the stream object
+Makefile    &#9;Standard Windows NT makefile
+Mintopo.cpp &#9;Implementation of the topology miniport
+Mintopo.h   &#9;Header file for the topology miniport
+Minwave.cpp &#9;Implementation of the wave PCI miniport
+Minwave.h   &#9;Header file for the wave PCI miniport
+Prophnd.cpp &#9;Implementation of the property handler (part of the topology miniport)
+Readme.htm  &#9;Documentation for this sample (this file)
+Shared.h    &#9;Header file shared by every C++ source file
+Sources     &#9;Dependency information for compiling
+
+</FONT><P ALIGN="CENTER"><A HREF="#top"><FONT FACE="Verdana" SIZE=2>Top of page</FONT></A><FONT FACE="Verdana" SIZE=2> </P></FONT>
+<TABLE CELLSPACING=0 BORDER=0 WIDTH=624>
+<TR><TD VALIGN="MIDDLE" BGCOLOR="#00ffff" HEIGHT=2>
+<P></TD>
+</TR>
+</TABLE>
+
+<FONT FACE="MS Sans Serif" SIZE=1><P>&copy; Microsoft Corporation 1999</FONT><FONT FACE="Verdana" SIZE=2> </P></FONT></BODY>
+</HTML>

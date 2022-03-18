@@ -1,0 +1,38 @@
+!IF 0
+
+Copyright (C) Microsoft Corporation, 1997 - 1999
+
+Module Name:
+
+    sources.
+
+!ENDIF
+
+TARGETNAME=ScsiScan
+TARGETTYPE=DRIVER
+#DRIVERTYPE=WDM
+
+TARGETPATH=obj
+#TARGETPATH=$(BASEDIR)\lib
+
+
+C_DEFINES=-DPNP_POWER
+MSC_WARNING_LEVEL=-W3 -WX
+
+#
+# Debugging options
+#
+!IFDEF MAXDEBUG
+NTDEBUG=ntsd
+NTDEBUGTYPE=windbg
+MSC_OPTIMIZATION=/Od
+C_DEFINES  = $(C_DEFINES) /DMAXDEBUG /DDEBUG /DDBG=1
+!ENDIF
+
+#USE_MAPSYM=1
+SYNCHRONIZE_BLOCK=1
+
+SOURCES=class.c \
+        scsiscan.c \
+        scsiscan.rc
+

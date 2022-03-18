@@ -1,0 +1,31 @@
+TARGETNAME=WIN1394
+TARGETTYPE=PROGRAM
+
+USE_CRTDLL=1
+USE_MAPSYM=1
+
+INCLUDES=..\..\inc
+
+TARGETLIBS=$(SDK_LIB_PATH)\kernel32.lib \
+           $(SDK_LIB_PATH)\user32.lib   \
+           $(SDK_LIB_PATH)\libcmt.lib   \
+           $(SDK_LIB_PATH)\1394api.lib
+
+TARGETPATH=obj
+
+MSC_WARNING_LEVEL=/W3 /WX
+
+SOURCES= 1394.c       \
+         async.c      \
+         debug.c      \
+         isoch.c      \
+         util.c       \
+         win1394.c    \
+         win1394.rc
+
+UMTYPE=windows
+UMENTRY=winmain
+
+USER_C_FLAGS=/MT
+C_DEFINES=/DW32 /DWIN32
+

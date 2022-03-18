@@ -1,0 +1,73 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>E100BEX</TITLE>
+<META NAME="Template" CONTENT="C:\PROGRAM FILES\MICROSOFT OFFICE\OFFICE\html.dot">
+</HEAD>
+<BODY TEXT="#000000" LINK="#0000ff" VLINK="#800080" BGCOLOR="#ffffff" leftmargin="8">
+<FONT FACE="Verdana"><H2><A NAME="MYSAMPLE">E100BEX</A> </H2>
+
+<span style="color:#FF0000">[This is preliminary documentation and subject to change.]</span> 
+
+<H3>SUMMARY</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+This sample is an NDIS 5 deserialized miniport driver for the Intel EtherExpress<SUP>TM</SUP> PRO/100+ Ethernet PCI adapter and the Intel EtherExpress<SUP>TM</SUP> PRO/100B PCI adapter. It illustrates NDIS 4 and NDIS 5 features such as multiple packet sends/receives, media sense, WMI, and Power Management.</P>
+This driver supports Plug and Play. The code is 64-bit compliant, and builds properly with Microsoft&#174; Visual C&#174; 6.0. <P>
+
+<H3>BUILDING THE SAMPLE</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+<FONT FACE="Verdana,ARIAL" SIZE=2>Run the <B>build</B> command from this directory to build the sample. That creates the binary E100bex.sys. 
+
+<H3>TOOLS</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+The NDISTEST tool can be used to test some of the features of this driver. Note that this is not a production driver, and is not intended to replace the driver in the Windows&#174; 2000 build. </P>
+<H3>CODE TOUR</H3>
+<H4>File Manifest</H4>
+
+</FONT></FONT><FONT FACE="Courier" SIZE=3><P><U><PRE>Files         Description
+</U>E100BEX.htm    The documentation for this sample (this file)
+Sources       The generic file for building the code sample
+Net557ex.inf  The .inf file for installing the code sample
+D100.rc       The resource file for the code sample
+82557.h       Hardware definitions and structures
+D100dbg.h     Debug code definitions and macros
+D100pr.h      Function prototypes
+D100sw.h      Internal data structures and macros
+Equates.h     Constant definitions
+Inlinef.h     All inline functions
+Pci.h         PCI register definitions and structures
+Precomp.h     Precompile header
+Queue.h       Queue management structures and macros
+D100.c        DriverEntry, Initialization, Reset and Halt routines
+Eeprom.c      Routines to access EEPROM information
+Init.c        Hardware initialization routines
+Interrup.c    ISR and Interrupt DPC routines, including receive handling
+Parse.c       Registry access routines
+Pci.c         Routine to initialize PCI access for a device
+Physet.c      Routines to detect and set up the physical layer
+Request.c     Routines to handle NDIS Requests
+Routines.c    Miscellaneous utility functions
+Send.c        Send side processing
+
+
+</FONT></pre></FONT><FONT FACE="Verdana" SIZE=2><P><H4>Programming Tour</H4>
+<FONT FACE="Verdana,ARIAL" SIZE=2><P>Some of the features illustrated in this driver are listed below, along with the files that contain the feature.</P>
+<OL>
+
+<LI>NDIS 4: <B>NdisSendPackets();</B> multiple packets per send request are handled (see Send.c).</LI>
+<LI>NDIS 4: <B>NdisMIndicateReceivePacket();</B> multiple packets per receive indication (see Interrup.c).</LI>
+<LI>NDIS 4: When the adapter driver begins to run out of receive memory, <B>NdisMAllocateSharedMemory()</B> is called to allocate more shared memory for receive buffers (see Interrup.c and others).</LI>
+<LI>NDIS 4: NdisMRegisterAdapterShutdownHandler() is called at initialization time to make sure the adapter has a function that stops generating interrupts and receiving packets into main memory (see D100.c).</LI>
+<LI>NDIS 4: Media disconnect/connect indications are supported. This allows the driver to tell NDIS when the adapter has lost or regained link (see Request.c and D100.c).</LI>
+<LI>NDIS 4: Packet priority support is stubbed in comments in this driver (see Send.c).</LI>
+<LI>NDIS 5: This driver is a deserialized miniport, meaning it handles all its own spinlocks. This driver only implements a simple method of using spinlocks: it has a <B>NdisAcquireSpinlock()</B> at every entry point and a <B>NdisReleaseSpinlock()</B> at the return from those entry points. The locks could be done more efficiently in a production driver by moving the locking closer to the resources in the driver that need to be accessed with atomic operations.</LI>
+<LI>NDIS 5: WMI: There are several examples of using GUIDs to advertise custom driver SETs and QUERIES. The E100b.mof and Request.c files implement the functionality, the Makefile.inc file compiles the .mof file, and the D100.rc file includes the .mof data into the driver resource area.</LI>
+<LI>NDIS 5: TCP Checksum Offload is stubbed in comments (see Send.c and Request.c).</LI>
+<LI>NDIS 5: Power Management for ACPI adapters is stubbed and commented (see Request.c).</LI></OL>
+</FONT><P ALIGN="CENTER"><A HREF="#top"><FONT FACE="Verdana" SIZE=2>Top of page</FONT></A><FONT FACE="Verdana" SIZE=2> </P></FONT>
+<TABLE CELLSPACING=0 BORDER=0 WIDTH=624>
+<TR><TD VALIGN="MIDDLE" BGCOLOR="#00ffff" HEIGHT=2>
+<P></TD>
+</TR>
+</TABLE>
+
+<FONT FACE="MS Sans Serif" SIZE=1><P>&copy; 1999 Microsoft Corporation</FONT><FONT FACE="Verdana" SIZE=2> </P></FONT></BODY>
+</HTML>

@@ -1,0 +1,62 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-
+1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>3MODE FDC1</TITLE>
+</HEAD>
+<BODY LINK="#0000ff">
+
+<FONT FACE="Verdana" SIZE=5><H2>3MODE FDC1</H2>
+</FONT><FONT FACE="Verdana" SIZE=2>
+<P><span style="color:#FF0000;font-size:10pt;font-family:Arial">[This is preliminary 
+documentation and subject to change.]</span></P>
+
+<H3>SUMMARY</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+This FDC sample is a floppy disk controller for the Toshiba 3Mode series.
+The sample works with the following models:<p>
+
+Toshiba EQUIUM 5160D1<br>
+Toshiba EQUIUM 5200D1<br>
+Toshiba EQUIUM 5200M1<br>
+Toshiba EQUIUM 6200D1<br>
+Toshiba EQUIUM 6260M1<br>
+Toshiba EQUIUM 6230D1<br>
+Toshiba EQUIUM 5230D1<br>
+Toshiba EQUIUM 5200D2<br>
+Toshiba EQUIUM 5230M1<br>
+Toshiba PV3000/5000/5500 series<p>
+
+Other Toshiba models are covered by the 3mode\Fdc.2 sample.
+The sample is located in the directory \\Ntddk\Src\Storage\3mode\Fdc.
+FDC resides at the bottom of the driver stack and performs the low-level interactions with the physical device.  Typically, FDC routines are
+called by the driver that occupies the next level up in the driver stack, possibly the Flpydisk sample.<P>
+<B>Note</B>: The controller can be used with a class driver other than Flpydisk, such as a floppy tape driver.<P>  
+
+Fdc does not compile in 64-bit. It is compatible with x86 32-bit only.<P> 
+
+<H3>BUILDING THE SAMPLE</H3></FONT><FONT FACE="Verdana" 
+SIZE=2><P>
+
+Type <B>build</B> in the \\Ntddk\Src\Storage\3mode\Fdc directory. A successful build produces Tosdfdc1.sys.
+
+<H3>CODE TOUR</H3>
+<H4>File Manifest</H4>
+</FONT><U><PRE>File&#9;&#9;Description
+</U>
+Fdc.c&#9;	Floppy disk controller routines
+Sources&#9;	Sources for build
+Flpyenbl.h&#9;Data declarations for floppy controller enabling
+Acpi.c&#9;	Routines to negotiate with ACPI concerning floppy device state
+Fdc.rc&#9;	Resource file
+Q117enum.c&#9;Tape driver enumeration routines
+<p>
+</FONT><P ALIGN="CENTER"><A HREF="#top"><FONT FACE="Verdana" SIZE=2>Top of page</FONT></A><FONT FACE="Verdana" SIZE=2> </P></FONT>
+<TABLE CELLSPACING=0 BORDER=0 WIDTH=624>
+<TR><TD VALIGN="MIDDLE" BGCOLOR="#00ffff" HEIGHT=2>
+<P></TD>
+</TR>
+</TABLE>
+
+<FONT FACE="MS Sans Serif" SIZE=1><P>&copy; 1999 Microsoft Corporation</FONT><FONT FACE="Verdana" SIZE=2> </P></FONT></BODY>
+</HTML>

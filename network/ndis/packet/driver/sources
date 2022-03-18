@@ -1,0 +1,17 @@
+TARGETNAME=packet
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+
+TARGETLIBS=$(DDK_LIB_PATH)\ndis.lib
+C_DEFINES=$(C_DEFINES) -DNDIS50 
+
+
+INCLUDES=..\..\inc;..\inc;
+
+SOURCES=packet.c    \
+        openclos.c  \
+        read.c      \
+        write.c	\
+	packet.rc
+
+

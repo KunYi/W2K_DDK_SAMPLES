@@ -1,0 +1,30 @@
+TARGETNAME=nscirda
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+
+TARGETLIBS=$(DDK_LIB_PATH)\ndis.lib
+
+C_DEFINES=$(C_DEFINES) -DNDIS_MINIPORT_DRIVER -DNDIS50_MINIPORT -DIRDA
+
+DRIVER_ALIGNMENT=0x200
+
+INCLUDES=..\..\inc;..\..\..\inc
+
+SOURCES= \
+        comm.c \
+        fcs.c \
+        nsc.c \
+        request.c \
+        resource.c \
+        settings.c  \
+        convert.c  \
+        init.c \
+        nscfir.c \
+        sync.c \
+        dongle.c \
+        nscirda.rc
+
+
+MSC_WARNING_LEVEL=/W3
+MSC_OPTIMIZATION=/Oi
+

@@ -1,0 +1,15 @@
+#    Copyright (c) 1997-1999 Microsoft Corporation.  All Rights Reserved.
+
+TARGETNAME=stdunk
+TARGETTYPE=LIBRARY
+TARGETPATH=..\lib
+
+INCLUDES=..\inc
+
+MSC_WARNING_LEVEL=-W3 -WX
+
+C_DEFINES=-D_WIN32 -DUNICODE -D_UNICODE
+LINKER_FLAGS=-map
+
+SOURCES=\
+        stdunk.cpp

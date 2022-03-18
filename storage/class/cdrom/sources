@@ -1,0 +1,27 @@
+!IF 0
+
+Copyright (C) Microsoft Corporation, 1996 - 1999
+
+Module Name:
+
+    sources.
+
+!ENDIF
+
+TARGETNAME=cdrom
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+
+TARGETLIBS=\
+        $(DDK_LIB_PATH)\classpnp.lib \
+        $(SDK_LIB_PATH)\ntoskrnl.lib
+
+
+
+INCLUDES=..\inc;..\..\inc
+
+SOURCES=cdrom.c        \
+        ioctl.c        \
+        sec.c          \
+        scsicdrm.rc
+

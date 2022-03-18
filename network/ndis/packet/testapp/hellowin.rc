@@ -1,0 +1,47 @@
+#include "windows.h"
+
+#include "hellowin.h"
+
+
+GenericMenu MENU
+  {
+    POPUP    "Adapter"
+    {
+      MENUITEM "Open",  IDM_OPEN
+      MENUITEM "Close", IDM_CLOSE
+      MENUITEM "Read",  IDM_READ
+      MENUITEM "Send",  IDM_SEND
+      MENUITEM "Reset", IDM_RESET
+      MENUITEM SEPARATOR
+      MENUITEM "About...",IDM_ABOUT
+    }
+
+    POPUP    "Filter"
+    {
+      MENUITEM "None",          IDM_NO_FILTER
+      MENUITEM "Directed",      IDM_DIRECTED
+      MENUITEM "Multicast",     IDM_MULTICAST
+      MENUITEM "Broadcast",     IDM_BROADCAST
+      MENUITEM "All-Multicast", IDM_ALL_MULTICAST
+      MENUITEM "Promiscuous",   IDM_PROMISCUOUS
+    }
+
+  }
+
+//
+// Dialog
+//
+
+IDD_DIALOG DIALOG DISCARDABLE  0, 0, 232, 45
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Select an Adapter and press Open"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    DEFPUSHBUTTON   "Open",ID_OK,165,14,50,14,BS_NOTIFY
+    LISTBOX         IDC_LIST,7,7,151,24,LBS_NOINTEGRALHEIGHT | 
+                    WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+END
+
+
+
+

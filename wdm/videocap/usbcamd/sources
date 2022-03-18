@@ -1,0 +1,46 @@
+
+#############################################################################
+#
+#       
+#       Copyright (C) Microsoft Corporation 1999
+#       All Rights Reserved.
+#                                                                          
+#       Sources for USBCamD (USB Camera Device)
+#
+##########################################################################
+
+TARGETNAME=USBCamD
+TARGETTYPE=EXPORT_DRIVER
+TARGETPATH=obj
+TARGETPATHLIB=$(DDK_LIB_DEST)
+
+DRIVERTYPE=WDM
+DLLDEF=usbcamd.def
+
+C_DEFINES=-DPNP_POWER -DUSE_DMA_MACROS -DWINNT
+
+!IF $(FREEBUILD) 
+MSC_OPTIMIZATION=/Oxs
+!ELSE
+MSC_OPTIMIZATION=/Od /Oi
+!ENDIF
+
+MSC_WARNING_LEVEL=/W3 /WX
+
+
+INCLUDES=
+
+TARGETLIBS=$(DDK_LIB_PATH)\stream.lib \
+           $(DDK_LIB_PATH)\ksguid.lib \
+           $(DDK_LIB_PATH)\usbd.lib
+
+
+SOURCES= \
+        dbglog.c        \
+        iso.c           \
+        reset.c         \
+        stream.c        \
+        usbcamd.c       \
+        intbulk.c       \
+        usbcamd.rc
+

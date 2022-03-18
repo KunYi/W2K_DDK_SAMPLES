@@ -1,0 +1,13 @@
+
+TARGETNAME=kbdfr
+TARGETPATH=obj
+TARGETTYPE=DYNLINK
+
+!INCLUDE ..\sources.inc
+
+INCLUDES=..\inc
+
+SOURCES=kbdfr.c kbdfr.rc
+
+
+

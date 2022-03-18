@@ -1,0 +1,535 @@
+/*******************************************************************************
+*
+*  (C) COPYRIGHT MICROSOFT CORP., 1998
+*
+*  TITLE:       MiniDrvr.Idl
+*
+*  VERSION:     2.0
+*
+*  DATE:        28 Aug, 1998
+*
+*  DESCRIPTION:
+*   IDL source for the WIA mini driver class. 
+*
+*******************************************************************************/
+
+interface IWiaMiniDrv;
+interface IWiaMiniDrvCallBack;
+interface IWiaDrvItem;
+interface IWiaItem;
+interface IWiaPropertyStorage;
+
+import "unknwn.idl";
+import "oaidl.idl";
+import "propidl.idl";
+import "wia.idl";
+
+/**************************************************************************\
+* 
+* MINIDRV_TRANSFER_CONTEXT - Mini Driver Data Transfer Context
+*   
+*   
+* Elements:
+*
+*   lSize - Size in bytes of the MINIDRV_TRANSFER_CONTEXT.
+*
+*   The following are set from item properties validated by 
+*   the mini driver:
+*    
+*     lWidthInPixels - Derived from WIA_IPA_WIDTH_PIXELS.
+*     lLines         - Derived from WIA_IPA_LINES.    
+*     lDepth         - Derived from WIA_IPA_DEPTH.     
+*     lXRes          - Derived from WIA_IPA_XRES.
+*     lYRes          - Derived from WIA_IPA_YRES.
+*     lCompression   - Derived from WIA_IPA_COMPRESSION.
+*     ulFormatFlags  - Derived from WIA_IPA_FORMAT_FLAGS.
+*     gFormat        - Derived from WIA_IPA_FORMAT.
+*     tymed          - Derived from WIA_IPA_TYMED.
+*
+*   The following are set by the data transfer portion of 
+*   the class driver:
+*
+*     hFile                - Handle to open file during file transfers.
+*     bTransferDataCB      - Indicates that a data transfer callback has 
+*                            been provided. 
+*     bClassDrvAllocBuf    - Indicates that class driver has allocated the 
+*                            transfer buffer.
+*
+*   The following are used to make the data transfer call back:
+*
+*     cbOffset             - Offset of this transfer. The application uses
+*                            this value to place the current transfer. 
+*     lBufferSize          - Size of total transfer buffer.
+*     lActiveBuffer        - Tracks which portion of buffer is used for 
+*                            current transfer.
+*     lNumBuffers          - Number of buffer sections, either 1 or 2.
+*     pBaseBuffer          - Start of transfer buffer.
+*     pTransferBuffer      - Start of current transfer.
+*     lClientAddress       - Client address of transfer. 
+*     pIWiaMiniDrvCallBack - Data transfer or status callback.
+*
+*   The following are set by wiasGetImageInformation or 
+*   the mini driver:
+*
+*     lImageSize     - Size, in bytes, of uncompressed bits in a single page. 
+*     lHeaderSize    - Size, in bytes, of image header in a single page.
+*     lItemSize      - Size, in bytes, of bits and header. Can be zero if the 
+*                      item size is unknown before acquisition. For example,
+*                      in compressed mode or for multi page format.
+*     cbWidthInBytes - Size, in bytes of an image line.
+*
+*   The following are used to support multi page TIFF:
+*
+*     lPage          - Current page, zero based.
+*     lCurIfdOffset  - Current page IFD offset.
+*     lPrevIfdOffset - Previous page IFD offset.
+*     
+* History:
+*
+*    9/1/1998   - Initial Version
+*
+\**************************************************************************/
+
+typedef struct _MINIDRV_TRANSFER_CONTEXT{
+    LONG                 lSize;
+    LONG                 lWidthInPixels;
+    LONG                 lLines;
+    LONG                 lDepth;
+    LONG                 lXRes;
+    LONG                 lYRes;
+    LONG                 lCompression;
+    GUID                 guidFormatID;
+    LONG                 tymed;
+    LONG                 hFile;
+    LONG                 cbOffset;
+    LONG                 lBufferSize;
+    LONG                 lActiveBuffer;
+    LONG                 lNumBuffers;
+    BYTE                 *pBaseBuffer;
+    BYTE                 *pTransferBuffer;
+    BOOL                 bTransferDataCB;
+    BOOL                 bClassDrvAllocBuf;       
+    LONG                 lClientAddress;
+    IWiaMiniDrvCallBack  *pIWiaMiniDrvCallBack;
+    LONG                 lImageSize;
+    LONG                 lHeaderSize;
+    LONG                 lItemSize;                 
+    LONG                 cbWidthInBytes; 
+    LONG                 lPage;
+    LONG                 lCurIfdOffset;
+    LONG                 lPrevIfdOffset;
+    
+} MINIDRV_TRANSFER_CONTEXT, *PMINIDRV_TRANSFER_CONTEXT;
+
+/*******************************************************************************
+*
+*  WIA_DEV_CAP_DRV
+*
+*   WIA_DEV_CAP_DRV structure is the same as WIA_DEV_CAP but the strings are
+*   of type LPOLESTR instead of BSTR, and CapGUID is a pointer instead of an
+*   actual GUID.
+*
+*******************************************************************************/
+
+typedef struct _WIA_DEV_CAP_DRV {
+        GUID                *guid;
+        ULONG               ulFlags;
+        LPOLESTR            wszName;
+        LPOLESTR            wszDescription;
+        LPOLESTR            wszIcon;
+} WIA_DEV_CAP_DRV,*PWIA_DEV_CAP_DRV;
+
+/*******************************************************************************
+*
+* IWiaMiniDrvItem Interface
+*
+*******************************************************************************/
+
+[
+    object,
+    uuid(d8cdee14-3c6c-11d2-9a35-00c04fa36145),
+    helpstring("WIA Mini Driver Interface"),
+    pointer_default(unique)
+]
+
+interface IWiaMiniDrv : IUnknown
+{
+    [helpstring("Initialize WIA, build item tree, etc")]
+    HRESULT drvInitializeWia(
+        [in]            BYTE*,
+        [in]            LONG,
+        [in]            BSTR,
+        [in]            BSTR,
+        [in]            IUnknown*,
+        [in]            IUnknown*,
+        [out]           IWiaDrvItem**,
+        [out]           IUnknown**,
+        [out]           LONG*);
+        
+    [helpstring("Acquire data from the device item")]
+    HRESULT drvAcquireItemData(
+        [in]            BYTE*,
+        [in]            LONG,
+        [in, out]       PMINIDRV_TRANSFER_CONTEXT,
+        [out]           LONG*);
+
+    [helpstring("Initialize the device item properties")]
+    HRESULT drvInitItemProperties(
+        [in]            BYTE*,
+        [in]            LONG,
+        [out]           LONG*);
+
+    [helpstring("Mini driver validatation of the device item properties")]
+    HRESULT drvValidateItemProperties(
+        [in]            BYTE*,
+        [in]            LONG,
+        [in]            ULONG,
+        [in]            const   PROPSPEC*,
+        [out]           LONG*);
+
+    [helpstring("Mini driver write of the device item properties")]
+    HRESULT drvWriteItemProperties(
+        [in]            BYTE*,
+        [in]            LONG,
+        [in]            PMINIDRV_TRANSFER_CONTEXT,
+        [out]           LONG*);    
+    
+    [helpstring("Mini driver read of the device item properties")]
+    HRESULT drvReadItemProperties(
+        [in]            BYTE*,
+        [in]            LONG,
+        [in]            ULONG,
+        [in]            const   PROPSPEC*,
+        [out]           LONG*);    
+
+    [helpstring("Lock Device")]
+    HRESULT drvLockWiaDevice(
+        [in]            BYTE*,
+        [in]            LONG,
+        [out]           LONG*);
+
+    [helpstring("UnLock Device")]
+    HRESULT drvUnLockWiaDevice(
+        [in]            BYTE*,
+        [in]            LONG,
+        [out]           LONG*);
+
+    [helpstring("Look at item and create sub-items if needed")]
+    HRESULT drvAnalyzeItem(
+        [in]            BYTE*,
+        [in]            LONG,
+        [in]            LONG*);
+
+    [helpstring("Map a device error value to a string")]
+    HRESULT drvGetDeviceErrorStr(    
+        [in]            LONG,
+        [in]            LONG, 
+        [out]           LPOLESTR*,
+        [out]           LONG*);
+        
+    [helpstring("Issue a device command")]
+    HRESULT drvDeviceCommand(
+        [in]            BYTE*,
+        [in]            LONG,
+        [in]            const GUID*,
+        [out]           IWiaDrvItem**,
+        [out]           LONG*);
+
+    [helpstring("Get the device capabilities")]
+    HRESULT drvGetCapabilities(
+        [in]            BYTE*,    
+        [in]            LONG,    
+        [out]           LONG*,
+        [out]           WIA_DEV_CAP_DRV**,
+        [out]           LONG*);
+    
+    [helpstring("Delete the item from the device")]
+    HRESULT drvDeleteItem(
+        [in]            BYTE*,
+        [in]            LONG,
+        [out]           LONG*);
+
+    [helpstring("Free driver item context")]
+    HRESULT drvFreeDrvItemContext(
+        [in]            LONG,
+        [in]            BYTE*,
+        [out]           LONG*);
+
+    [helpstring("Get the FORMAT and TYMED")]
+    HRESULT drvGetWiaFormatInfo(
+        [in]            BYTE*,    
+        [in]            LONG,    
+        [out]           LONG*,
+        [out]           WIA_FORMAT_INFO**,
+        [out]           LONG*);
+
+    [helpstring("Notify Pnp event received by device manager")]
+    HRESULT drvNotifyPnpEvent(
+        [in]            const GUID      *pEventGUID,
+        [in]            BSTR             bstrDeviceID,
+        [in]            ULONG            ulReserved);
+
+    [helpstring("UnInitialize WIA, remove resources attached to item, etc")]
+    HRESULT drvUnInitializeWia(
+        [in]            BYTE*);
+};
+
+/*******************************************************************************
+*
+* IWiaMiniDrvCallBack Interface
+*
+*******************************************************************************/
+
+[
+    object,
+    uuid(33a57d5a-3de8-11d2-9a36-00c04fa36145),
+    helpstring("WIA Mini Driver Call Back Interface"),
+    pointer_default(unique)
+]
+
+interface IWiaMiniDrvCallBack : IUnknown
+{
+    [id(1), helpstring("Acquire data from the device")]
+    HRESULT MiniDrvCallback(
+        [in]            LONG                            lReason,
+        [in]            LONG                            lStatus,
+        [in]            LONG                            lPercentComplete,
+        [in]            LONG                            lOffset,
+        [in]            LONG                            lLength,
+        [in]            PMINIDRV_TRANSFER_CONTEXT       pTranCtx,
+        [in]            LONG                            lReserved);
+};
+  
+
+
+/**************************************************************************\
+* 
+*   device driver communitcates with DrvItem object through this interface
+*   
+*   
+* Arguments:
+*   
+*
+*
+* Return Value:
+*
+*    Status
+*
+* History:
+*
+*    1/19/1999 Original Version
+*
+\**************************************************************************/
+
+[
+    object,
+    uuid(1f02b5c5-b00c-11d2-a094-00c04f72dc3c),
+    helpstring("WIA Mini Driver DrvItem Interface"),
+    pointer_default(unique)
+]
+interface IWiaDrvItem : IUnknown
+{
+    HRESULT GetItemFlags(
+        [out]           LONG*);                
+    
+    HRESULT GetDeviceSpecContext(
+        [out]           BYTE**);
+
+    HRESULT GetFullItemName(
+        [out]           BSTR*);
+
+    HRESULT GetItemName(
+        [out]           BSTR*);
+
+    HRESULT AddItemToFolder(
+        [in]            IWiaDrvItem*);
+    
+    HRESULT UnlinkItemTree(
+        [in]            LONG);
+
+    HRESULT RemoveItemFromFolder(
+        [in]            LONG);
+    
+    HRESULT FindItemByName(
+        [in]            LONG,
+        [in]            BSTR,
+        [out]           IWiaDrvItem**);
+
+    HRESULT FindChildItemByName(
+        [in]            BSTR,
+        [out]           IWiaDrvItem**);
+
+    HRESULT GetParentItem(
+        [out]           IWiaDrvItem**);
+
+    HRESULT GetFirstChildItem(
+        [out]           IWiaDrvItem**);
+
+    HRESULT GetNextSiblingItem(
+        [out]           IWiaDrvItem**);
+
+    HRESULT DumpItemData(
+        [out]           BSTR*);
+};
+
+/*******************************************************************************
+* WIA_DATA_THREAD_INFO
+*
+*   Information for data callback thread  
+*
+* History:
+*
+*    4/9/1999 Original Version
+*
+*******************************************************************************/
+
+typedef struct _WIA_DATA_THREAD_INFO {
+
+    //
+    // communications to client
+    //
+
+    LONG                            lReason;
+    LONG                            lStatus;
+    LONG                            lPercentComplete;
+    LONG                            lOffset;
+    LONG                            lLength;
+    LONG                            lClientAddress;
+    LONG                            lMarshalLength;
+    BYTE                            *pBuffer;
+
+    //
+    //  thread sync
+    //
+
+    BOOL                            bTerminateThread;
+    HANDLE                          hEventStart;
+    HANDLE                          hEventComplete;
+    HRESULT                         hr;
+    IWiaDataCallback*               pIDataCallback;
+}WIA_DATA_THREAD_INFO,*PWIA_DATA_THREAD_INFO;
+
+/*******************************************************************************
+* WIA_PROPERTY_INFO
+*
+* Structure to store default access and valid value information
+* for item properties.
+*
+* History:
+*
+*    4/9/1999 Original Version
+*
+*******************************************************************************/
+
+typedef struct _WIA_PROPERTY_INFO
+{
+    ULONG       lAccessFlags;
+    VARTYPE     vt;
+
+    union {
+
+        struct {
+            LONG       Min;
+            LONG       Nom;
+            LONG       Max;
+            LONG       Inc;
+        } Range;
+        
+        struct {
+            DOUBLE      Min;
+            DOUBLE      Nom;
+            DOUBLE      Max;
+            DOUBLE      Inc;
+        } RangeFloat;
+        
+        struct {
+            LONG        cNumList;
+            LONG        Nom;
+            BYTE        *pList;
+        } List;
+        
+        struct {
+            LONG        cNumList;
+            DOUBLE      Nom;
+            BYTE        *pList;
+        } ListFloat;
+
+        struct {
+            LONG        cNumList;
+            GUID        Nom;
+            GUID        *pList;
+        } ListGuid;
+        
+        struct {
+            LONG        cNumList;
+            BSTR        Nom;
+            BSTR        *pList;
+        } ListBStr;
+        
+        struct {
+            LONG        Nom;    
+            LONG        ValidBits;
+        } Flag;
+
+        struct {
+            LONG        Dummy;       
+        } None;
+
+    } ValidVal;
+
+}WIA_PROPERTY_INFO, *PWIA_PROPERTY_INFO;
+
+/*******************************************************************************
+* WIA_PROPERTY_CONTEXT
+*
+* Structure to store propids and booleans.  The boolean indicates whether the
+* corresponding property is being written (changed) by an application calling
+* WriteMultiple.
+*
+* History:
+*
+*    4/9/1999 Original Version
+*
+*******************************************************************************/
+
+typedef struct _WIA_PROPERTY_CONTEXT{
+    ULONG       cProps;
+    PROPID      *pProps;
+    BOOL        *pChanged;
+} WIA_PROPERTY_CONTEXT, *PWIA_PROPERTY_CONTEXT;
+
+/*******************************************************************************
+* WIAS_CHANGED_VALUE_INFO
+*
+* Structure to store propids and booleans.  The boolean indicates whether the
+* corresponding property is being written (changed) by an application calling
+* WriteMultiple.
+*
+* History:
+*
+*    4/9/1999 Original Version
+*
+*******************************************************************************/
+
+typedef struct _WIAS_CHANGED_VALUE_INFO{
+    BOOL        bChanged;
+    LONG        vt;
+    
+    union {
+        LONG    lVal;
+        FLOAT   fltVal;
+        BSTR    bstrVal;
+        GUID    guidVal;
+    } Old;
+    
+    union {
+        LONG    lVal;
+        FLOAT   fltVal;
+        BSTR    bstrVal;
+        GUID    guidVal;
+    } Current;
+} WIAS_CHANGED_VALUE_INFO, *PWIAS_CHANGED_VALUE_INFO;
+
+cpp_quote("#include \"wiamdef.h\"")
+
+

@@ -1,0 +1,8 @@
+; 'dirs' blocking file for %DDK_ROOT%\src\vdd
+[ia64]
+com_vdd=yes
+dosioctl=yes
+
+[axp64]
+com_vdd=yes
+dosioctl=yes

@@ -1,0 +1,71 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>ParPort</TITLE>
+<META NAME="Template" CONTENT="C:\PROGRAM FILES\MICROSOFT OFFICE\OFFICE\html.dot">
+</HEAD>
+<BODY TEXT="#000000" LINK="#0000ff" VLINK="#800080" BGCOLOR="#ffffff" leftmargin="8">
+<FONT FACE="Verdana"><H2><A NAME="MYSAMPLE">ParPort</A> </H2>
+
+<span style="color:#FF0000">[This is preliminary documentation and subject to change.]</span> 
+
+<H3>SUMMARY</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+The sources in this directory build the PARPORT.SYS driver that ships in Microsoft&#174; Windows&#174; 2000. <P>
+
+ParPort is a kernel-mode driver that runs on all platforms supported by Windows 2000. The driver compiles using both the 64-bit compiler and the x86 version of Microsoft Visual C&#174; 6.0; however, test coverage of the driver under 64-bit and x86 Visual C 6.0 is unknown. The driver supports Plug and Play and Power Management, but Power Management support is minimal.<P>
+
+ParPort is the parallel port arbiter that is used for port sharing. ParPort owns the resources associated with the parallel port hardware, and no driver in the system should touch the parallel port registers without first "acquiring" the port from ParPort. <P>
+
+Having acquired the port, the client driver is free to access the parallel port hardware to initiate an operation. Upon completion of the operation, the client driver must restore the state of the parallel port hardware and "release" the port back to ParPort.  Port sharing is cooperative and a driver must <I>not</I> hold the port for longer than required, or system functionality and/or performance may be severely degraded.<P>
+<H3>BUILDING THE SAMPLE</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+Type <B>build -c</B> to do a clean build. Headers other than the standard headers include Parallel.h and Ntddpar.h.<P>
+<H3>RESOURCES</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+ParClass sample is a client of ParPort. <P>
+
+<H3>CODE TOUR</H3>
+<H4>File Manifest</H4>
+</FONT><U><PRE>File&#9;&#9;Description
+</U>
+Debug.h	Debugging support
+Funcdecl.h	Function declarations (forward declarations)
+Parmode.h	Defines and forward declarations used in parmode.c
+Parport.h	Driver structures and defines
+Pch.h		Precompiled header
+Pnp.h		Defines and forward declariations used in pnp.c
+Util.h	Forward declarations for util.c functions
+
+Cleanup.c	Cleanup requests
+Debug.c     Debugging support
+Errlog.c	Interface to error log functions
+Initunld.c	Initialization (DriverEntry) and Unload support
+Ioctl.c	OCTLs
+Nec_r98.c	Special code for NEC R98 machines.
+Openclos.c	Handle Open and Close requests.
+Par12843.c	IEEE P1284.3 daisy chain support
+Parmode.c	Mode support (ECP, EPP, etc)
+Parport.c	Driver Globals
+Pnp.c		Plug and Play
+Power.c	Power Management
+Registry.c	Interface to registry
+Util.c	Utility functions
+Wmi.c		WMI (Windows Management Instrumentation)
+
+Sources	Sources file for building the sample
+Parport.htm This file
+Parlog.mc   Error log support
+
+</FONT><FONT FACE="Verdana" SIZE=2><P>
+
+<H4>Programming Tour</H4></pre></FONT><FONT FACE="Verdana" SIZE=2><P>
+This is the full source for the PARPORT.SYS driver. See code and comments in the source files.<P>
+
+</FONT><P ALIGN="CENTER"><A HREF="#top"><FONT FACE="Verdana" SIZE=2>Top of page</FONT></A><FONT FACE="Verdana" SIZE=2> </P></FONT>
+<TABLE CELLSPACING=0 BORDER=0 WIDTH=624>
+<TR><TD VALIGN="MIDDLE" BGCOLOR="#00ffff" HEIGHT=2>
+<P></TD>
+</TR>
+</TABLE>
+
+<FONT FACE="MS Sans Serif" SIZE=1><P>&copy; 1999 Microsoft Corporation</FONT><FONT FACE="Verdana" SIZE=2> </P></FONT></BODY>
+</HTML>

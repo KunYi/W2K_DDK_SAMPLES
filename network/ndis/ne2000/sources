@@ -1,0 +1,19 @@
+TARGETNAME=ne2000
+TARGETPATH=obj
+TARGETTYPE=DRIVER
+
+TARGETLIBS=$(DDK_LIB_PATH)\ndis.lib
+
+C_DEFINES=$(C_DEFINES) -DNDIS_MINIPORT_DRIVER -DNE2000
+
+SOURCES=interrup.c \
+        ne2000.c   \
+        card.c     \
+        ne2000.rc
+
+MSC_WARNING_LEVEL=/W3 /WX
+
+PRECOMPILED_INCLUDE=precomp.h
+PRECOMPILED_PCH=precomp.pch
+PRECOMPILED_OBJ=precomp.obj
+

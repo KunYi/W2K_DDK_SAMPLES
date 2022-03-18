@@ -1,0 +1,57 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>packet</TITLE>
+<META NAME="Template" CONTENT="C:\Program Files\Microsoft Office\Office\html.dot">
+</HEAD>
+<BODY TEXT="#000000" LINK="#0000ff" VLINK="#800080" BGCOLOR="#ffffff">
+
+<P><!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN"></P>
+<FONT FACE="Verdana" SIZE=2><P><A NAME="top"></A></P>
+<P><! ---------------- Snip Snip ---------------- ></P>
+</FONT><FONT FACE="Verdana"><H2><A NAME="MYSAMPLE">PACKET - Sample Protocol Driver</A></H2>
+<H3>SUMMARY</H3>
+<B>
+</B></FONT><FONT FACE="Verdana" SIZE=2><P>This driver demonstrates the functionality of an NDIS protocol driver on Windows&reg; 2000.  It dynamically binds to real/virtual adapters, creates a named deviceobject for each adapter,  which can be opened by a Win32 application via symbolic link. At the upper edge it uses regular driver interface (handles IRPs) and at the lower edge it uses NDIS interface to communicate with the NIC driver. The accompanying test application (packapp.exe) shows how to open the adapter, send or receive packets, and send OID requests to the adpater directly. </P>
+<P>This sample is NDIS 5.0 compliant and shows how to handle dynamic binding and unbinding to adapters whenever the adapters are pluggedin and unplugged. It also has minimal support for PnP and Power mangement queries. Refer to NDIS protocols driver design in the DDK documentation
+  for information.
+</P>
+<P>For simplicity, the Packet driver is writen so that it only binds to an Ethernet adapter. As a result it makes assumptions about frame size.</P>
+</FONT><FONT FACE="Verdana"><H3>BUILDING THE SAMPLE</H3>
+</FONT><FONT FACE="Verdana" SIZE=2><P>Run the <B>build -ceZ</B> command from this directory to build the sample—it creates packet.sys and packapp.exe. </P>
+<P>To install this driver on Windows&reg; 2000:</P>
+<P>On the desktop, right-click the <B>My Network Places</B> icon, and then choose <B>Properties</B>. </P>
+<P>Right-click the relevant Local Area Connection icon, and then choose <B>Properties</B>. </P>
+<P>Click on <B>Install</B>, select <B>Protocol</B> and Click on <B>Add</B> button. </P>
+<P>Click on <B>Have Disk...</B>; point to the PACKET.INF file present in the sample directory. </P>
+<P>Finally, follow through the dialog and finish the installation. </P>
+<P>To test the driver, run the Packapp.exe. This application automatically starts the driver when it loads, and stops the driver when it exits. This application is single threaded, so if you do a read and if there are no incoming packets on the adapter, it will wait until it gets one. So the application would appear as if it has hung. If you want to exit the application, you can terminate it anytime with the Task Manager. Also, this application can open only one adapter at a time. You can run multiple instances of this application to open other adapters, if the system has more than one.</P>
+<P>If you check build this driver, be sure to uncomment the debug messages in the packet receive handlers. Otherwise if you set the filter in the user application to promiscuous or broadcast mode, the driver may get flooded with packets, and it will spend all it's time printing debug messages. As a result you system will freeze.</P>
+
+</FONT><FONT FACE="Verdana"><H3>CODE TOUR</H3>
+<H4>File Manifest</H4>
+</FONT><U><PRE>File&#9;&#9;Description
+</U>
+Makefile&#9;Used during compilation to create the object and sys files
+Packet.c&#9;Main file contains DriverEntry, Bind/Unbind Apdapter and other support routines
+Read.c  &#9;Routines for handling user read (receive) request
+Write.c &#9;Routines for handling user write (send) request
+Openclos.c&#9;Routines for handling user open and close requests
+Packet.h&#9;Prototypes of all functions and data structures used by the Packet driver
+Packet.htm&#9;Html documentation of the Packet driver (this file)
+Packet.rc&#9;Resource file for the Packet driver
+Testapp.c&#9;Main file for the test application.
+ChildWin.c&#9;Routines for handling Child Windows messages.
+Packet32.c&#9;File for support routines used by the testapp.
+Sources&#9;&#9;List of source files that are compiled and linked to create the packet driver and packapp.exe</PRE>
+
+<P ALIGN="CENTER"><A HREF="#top"><FONT FACE="Verdana" SIZE=2>Top of page</FONT></A><FONT FACE="Verdana" SIZE=2> </P></FONT>
+<TABLE CELLSPACING=0 BORDER=0 WIDTH=624>
+<TR><TD VALIGN="MIDDLE" BGCOLOR="#00ffff" HEIGHT=2>
+<P></TD>
+</TR>
+</TABLE>
+
+<FONT FACE="MS Sans Serif" SIZE=1><P>&copy; 1999 Microsoft Corporation</FONT><FONT FACE="Verdana" SIZE=2> </P></FONT></BODY>
+</HTML>

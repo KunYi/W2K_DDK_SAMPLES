@@ -1,0 +1,6 @@
+LIBRARY KBDUS
+
+EXPORTS
+    KbdLayerDescriptor @1
+
+

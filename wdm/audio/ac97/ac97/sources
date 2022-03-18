@@ -1,0 +1,26 @@
+TARGETNAME=ac97smpl
+TARGETTYPE=DRIVER
+TARGETPATH=obj
+
+TARGETLIBS= \
+        $(SDK_LIB_PATH)\portcls.lib\
+        $(SDK_LIB_PATH)\libcntpr.lib\
+        ..\..\lib\*\stdunk.lib
+
+INCLUDES=..\..\inc;..
+
+MSC_WARNING_LEVEL=-W3 -WX
+
+C_DEFINES=$(CFASTFLAGS) $(C_DEFINES) -DUNICODE -D_UNICODE -DUNDER_NT -DINCLUDE_PRIVATE_PROPERTY
+
+LINKER_FLAGS=-map
+
+SOURCES=\
+        adapter.cpp     \
+        common.cpp      \
+        mintopo.cpp     \
+	minwave.cpp	\
+        prophnd.cpp     \
+        ichwave.cpp     \
+        ac97smpl.rc
+

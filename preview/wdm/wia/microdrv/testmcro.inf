@@ -1,0 +1,73 @@
+; TESTMCRO.INF  -- WIA test flatbed micro driver scanner Setup File
+; Copyright (c) 1998 Microsoft Corporation
+; Manufacturer:  Microsoft
+
+
+[Version]
+;CatalogFile=wia.cat
+LayoutFile=Layout.inf, Layout1.inf, Layout2.inf
+Signature="$CHICAGO$"
+Class=Image
+ClassGUID={6bdd1fc6-810f-11d0-bec7-08002be2092f}
+Provider=%Msft%
+
+[DestinationDirs]
+; By default, files will be copied to \windows\system.
+DefaultDestDir=11
+TScan.TempFiles=10,temp ; LDID_WIN
+
+[Manufacturer]
+%Mfg%=Models
+
+[Models]
+%TScan.DeviceDesc% = TScan.Scanner, PnPIDInformation
+
+[TScan.Scanner]
+SubClass=StillImage
+DeviceType=1
+DeviceSubType=0x1
+Capabilities=0x00000011
+DeviceData=TScan.DeviceData
+AddReg=TScan.AddReg
+CopyFiles=TScan.CopyFiles,TScan.TempFiles
+DelFiles=TScan.DelSysFiles
+DelReg=TScan.DelReg
+UninstallSection=Uninstall.TScan
+ICMProfiles="sRGB Color Space Profile.icm"
+
+[TScan.Scanner.Services]
+AddService = TScanscan, 0x00000002, TScanScan.AddService
+
+[TScan.DeviceData]
+Server=local
+UI DLL=sti.dll
+UI Class ID={4DB1AD10-3391-11D2-9A33-00C04FA36145}
+MicroDriver="TESTMCRO.DLL"
+
+[TScanScan.AddService]
+DisplayName    = %TScan.SvcDesc%
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\null.sys
+LoadOrderGroup = Base
+
+[TScan.AddReg]
+HKR,,HardwareConfig,1,1
+HKR,,USDClass,,"{BB6CF8E2-1511-40bd-91BA-80D43C53064E}"
+HKCR,CLSID\{BB6CF8E2-1511-40bd-91BA-80D43C53064E} ,,,"Microsoft Test MicroDriver USD"
+HKCR,CLSID\{BB6CF8E2-1511-40bd-91BA-80D43C53064E}\InProcServer32,,,%11%\WIAFBDRV.DLL
+HKCR,CLSID\{BB6CF8E2-1511-40bd-91BA-80D43C53064E}\InProcServer32,ThreadingModel,,"Both"
+
+[TScan.CopyFiles]
+wiafbdrv.dll
+testmcro.dll
+
+[TScan.TempFiles]
+
+[Strings]
+Msft="Microsoft"
+Mfg="Microsoft"
+TScan.DeviceDesc="WIA Test MicroDriver Scanner Device"
+TScan.SvcDesc="WIA Test MicroDriver Scanner"
+

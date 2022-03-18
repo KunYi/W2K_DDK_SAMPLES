@@ -1,0 +1,17 @@
+TARGETNAME=packapp
+TARGETPATH=obj
+TARGETTYPE=PROGRAM
+
+INCLUDES=..\inc;..\..\inc;$(DDKROOT)\inc
+
+SOURCES=hellowin.rc \
+	testapp.c  \
+        childwin.c \
+	packet32.c
+
+UMTYPE=windows
+UMBASE=0x01000000
+UMENTRY=winmain
+
+
+

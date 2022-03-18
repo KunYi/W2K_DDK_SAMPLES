@@ -1,0 +1,21 @@
+!IF 0
+
+Copyright (C) Microsoft Corporation, 1998 - 1999
+
+Module Name:
+
+    sources.
+
+!ENDIF
+
+TARGETNAME=mcd
+TARGETPATH=obj
+TARGETPATHLIB=obj
+TARGETTYPE=DRIVER_LIBRARY
+
+SYNCHRONIZE_DRAIN=1
+
+INCLUDES=..\inc;..\..\inc
+
+SOURCES=mcd.c
+

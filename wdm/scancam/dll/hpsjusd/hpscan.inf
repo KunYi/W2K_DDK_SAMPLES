@@ -1,0 +1,222 @@
+; SCANJET.INF  -- Windows Still Image Setup File
+; Copyright (c) 1997 Microsoft Corporation
+; Manufacturer:  Hewlett-Packard Co.
+
+; This is a sample of what a vendor distributed INF might look like. This INF
+; can be used by both Windows 98 and Windows 2000. It demonstrates the entries
+; and sections needed for a SCSI and USB scanner.
+
+[Version]
+Signature="$CHICAGO$"
+Class=Image
+ClassGUID={6bdd1fc6-810f-11d0-bec7-08002be2092f}
+Provider=%Provider%
+DriverVer=06/24/1999,5.00.2071.1
+
+[ControlFlags]
+ExcludeFromSelect=*
+
+[DestinationDirs]
+DefaultDestDir=11                               ; Win95,Win98 = \windows\system.  NT5 = \windows\system32
+Scsi.Scanner.CopySys32Files=10,system32\drivers ; \windows\system32\drivers
+Usb.Scanner.CopySys32Files=10,system32\drivers  ; \windows\system32\drivers
+DataSource.CopyFiles=10,TWAIN_32                ; \windows\twain_32
+
+[Manufacturer]
+%Mfg%=Models
+
+; For clarity, only two models are included in this INF file. The C5100A is a
+; SCSI scanner, and the 0101 is an USB scanner.
+
+[Models]
+%SCSI\HP______C5110A__________3.DeviceDesc% = C5110A.Scanner,HP______C5110A__________3
+%USB\Vid_03f0&Pid_0101.DeviceDesc%          = 0101.Scanner,USB\Vid_03f0&Pid_0101
+
+
+; ***** 4100C-specific sections *****
+
+; Win98 model section
+[0101.Scanner]
+SubClass=StillImage
+DeviceType=1
+Capabilities=1
+Events=0101.Events
+DeviceData=0101.DeviceData
+AddReg=Scanner.AddReg,Usb.Scanner.AddReg
+CopyFiles=Scanner.CopyFiles,Usb.Scanner.CopySys32Files,DataSource.CopyFiles
+PropertyPages="hpscnmgr.dll,EnumStiPropPages"
+DeviceSubType=0x0105
+VendorSetup="HPSJInst.dll,SetupHPDS"
+ICMProfiles="sRGB Color Space Profile.icm"
+
+; Win2000 model section
+[0101.Scanner.NT]
+Include=sti.inf
+Needs=STI.USBSection
+
+SubClass=StillImage
+DeviceType=1
+Capabilities=1
+Events=0101.Events
+DeviceData=0101.DeviceData
+AddReg=Scanner.AddReg.NT
+CopyFiles=Scanner.CopyFiles.NT,DataSource.CopyFiles
+PropertyPages="hpscnmgr.dll,EnumStiPropPages"
+DeviceSubType=0x0105
+VendorSetup="HPSJInst.dll,SetupHPDS"
+ICMProfiles="sRGB Color Space Profile.icm"
+
+[0101.DeviceData]
+TwainDS="HP ScanJet Source"
+Model=C6290A
+
+[0101.Events]
+GreenButton=%GreenButton%,{AD879F40-0982-11d1-A43B-080009EEBDF6},*
+CopyButton=%CopyButton%,{B38E1061-65AB-11d1-A43B-080009EEBDF6},HP ScanJet Copy Utility
+
+[0101.Scanner.NT.Services]
+Include=sti.inf
+Needs=STI.USBSection.Services
+
+
+; ***** 5p-specific sections *****
+
+; Win98 model section
+[C5110A.Scanner]
+SubClass=StillImage
+DeviceType=1
+Capabilities=3
+Events=C5110A.Events
+DeviceData=C5110A.DeviceData
+AddReg=Scanner.AddReg,Scsi.Scanner.AddReg
+CopyFiles=Scanner.CopyFiles,Scsi.Scanner.CopySys32Files,DataSource.CopyFiles
+PropertyPages="hpscnmgr.dll,EnumStiPropPages"
+DeviceSubType=0x0101
+VendorSetup="HPSJInst.dll,SetupHPDS"
+ICMProfiles="sRGB Color Space Profile.icm"
+
+; Win2000 model section
+[C5110A.Scanner.NT]
+Include=sti.inf
+Needs=STI.SCSISection
+
+SubClass=StillImage
+DeviceType=1
+Capabilities=3
+Events=C5110A.Events
+DeviceData=C5110A.DeviceData
+AddReg=Scanner.AddReg.NT
+CopyFiles=Scanner.CopyFiles.NT,DataSource.CopyFiles
+PropertyPages="hpscnmgr.dll,EnumStiPropPages"
+DeviceSubType=0x0101
+VendorSetup="HPSJInst.dll,SetupHPDS"
+ICMProfiles="sRGB Color Space Profile.icm"
+
+[C5110A.DeviceData]
+TwainDS="HP ScanJet Source"
+Model=C5110A
+
+[C5110A.Events]
+GreenButton=%GreenButton%,{AD879F40-0982-11d1-A43B-080009EEBDF6},*
+
+[C5110A.Scanner.NT.Services]
+Include=sti.inf
+Needs=STI.SCSISection.Services
+
+
+; ***** Model-generic add registry and copy sections *****
+
+; Win98 add registry section
+[Scanner.AddReg]
+HKR,,HardwareConfig,1,2
+HKR,,DevLoader,,*NTKERN
+HKR,,USDClass,,"{E9FA3320-7F3F-11D0-90EA-00AA0060F86C}"
+HKCR,CLSID\{E9FA3320-7F3F-11D0-90EA-00AA0060F86C},,,"Hewlett Packard USD"
+HKCR,CLSID\{E9FA3320-7F3F-11D0-90EA-00AA0060F86C}\InProcServer32,,,%11%\hpsjusd.dll
+HKCR,CLSID\{E9FA3320-7F3F-11D0-90EA-00AA0060F86C}\InProcServer32,ThreadingModel,,"Apartment"
+HKLM,System\CurrentControlSet\Services\Class\HpScanJetScanner,NoUseClass,,1
+HKLM,System\CurrentControlSet\Services\VxD\Hpsjvxd,StaticVxD,,Hpsjvxd.vxd
+HKLM,System\CurrentControlSet\Services\VxD\Hpsjvxd,Start,1,00
+HKLM,SOFTWARE\Microsoft\Windows\CurrentVersion\Run,HPSCANMonitor,,%11%\hpsjvxd.exe
+
+; Win98/SCSI add registry section
+[Scsi.Scanner.AddReg]
+HKR,,NTMPDriver,,"scsimap.sys,scsiscan.sys"
+
+; Win98/USB add registry section
+[Usb.Scanner.AddReg]
+HKR,,NTMPDriver,,"usbscan.sys"
+
+; Win2000 add registry section
+[Scanner.AddReg.NT]
+HKR,,HardwareConfig,1,2
+HKR,,DevLoader,,*NTKERN
+HKR,,USDClass,,"{E9FA3320-7F3F-11D0-90EA-00AA0060F86C}"
+HKCR,CLSID\{E9FA3320-7F3F-11D0-90EA-00AA0060F86C},,,"Hewlett Packard USD"
+HKCR,CLSID\{E9FA3320-7F3F-11D0-90EA-00AA0060F86C}\InProcServer32,,,%11%\hpsjusd.dll
+HKCR,CLSID\{E9FA3320-7F3F-11D0-90EA-00AA0060F86C}\InProcServer32,ThreadingModel,,"Apartment"
+HKLM,System\CurrentControlSet\Services\Class\HpScanJetScanner,NoUseClass,,1
+
+; Win98 copy files section
+[Scanner.CopyFiles]
+HPSJInst.dll,,,32
+hpsjusd.dll,,,32
+hpscnmgr.dll,,,32
+reg32.dll,,,32
+hpsjrreg.exe,,,32
+hpscntst.dll,,,32
+hpsj32.dll,,,32
+hpsjvxd.exe,,,32
+hpsjvxd.vxd,,,32
+
+; Win2000 copy files section
+[Scanner.CopyFiles.NT]
+HPSJInst.dll
+hpsjusd.dll
+hpscnmgr.dll
+reg32.dll
+hpsjrreg.exe
+hpscntst.dll
+hpsj32.dll
+
+; Only used by Win98
+[Scsi.Scanner.CopySys32Files]
+scsiscan.sys
+scsimap.sys
+
+; Only used by Win98
+[Usb.Scanner.CopySys32Files]
+usbscan.sys
+
+; Used by Win98 and Win2000 to copy data source to twain_32 directory
+[DataSource.CopyFiles]
+hpsjsrc.ds
+
+; ***** Source disk sections *****
+
+[SourceDisksNames]
+99=%DiskName%,,
+
+[SourceDisksFiles]
+hpscnmgr.dll=99
+hpscntst.dll=99
+hpsj32.dll=99
+reg32.dll=99
+hpsjusd.dll=99
+hpsjvxd.vxd=99
+hpsjvxd.exe=99
+hpsjrreg.exe=99
+hpsjinst.dll=99
+hpsjsrc.ds=99
+
+; ***** Strings *****
+
+[Strings]
+Provider="Microsoft"
+Mfg="Hewlett-Packard"
+DiskName="HP Scanning Software CD"
+SCSI\HP______C5110A__________3.DeviceDesc = "Hewlett-Packard ScanJet 5p"
+USB\Vid_03f0&Pid_0101.DeviceDesc          = "Hewlett-Packard ScanJet 4100C"
+GreenButton="Green Scan Button Press"
+CopyButton="Green Copy Button Press"
+

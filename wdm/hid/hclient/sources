@@ -1,0 +1,23 @@
+TARGETNAME=hclient
+TARGETTYPE=PROGRAM
+TARGETPATH=obj
+UMTYPE=windows
+UMENTRY=winmain
+
+MCS_WARNING_LEVEL=/W3/WX
+
+TARGETLIBS=$(DDK_LIB_PATH)\hid.lib \
+           $(SDK_LIB_PATH)\setupapi.lib \
+           $(SDK_LIB_PATH)\comdlg32.lib
+
+USE_CRTDLL=1
+
+SOURCES= hclient.c \
+         pnp.c \
+         report.c \
+         strings.c \
+         logpnp.c \
+         buffers.c \
+         ecdisp.c \
+         hclient.rc
+

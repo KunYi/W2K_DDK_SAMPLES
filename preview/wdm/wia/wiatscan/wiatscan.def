@@ -1,0 +1,10 @@
+LIBRARY WIATSCAN
+
+EXPORTS
+        DllGetClassObject   PRIVATE
+        DllCanUnloadNow     PRIVATE
+        ;DllRegisterServer
+        ;DllUnregisterServer
+
+
+

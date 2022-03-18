@@ -1,0 +1,17 @@
+# Copyright (c) 1997-1999 Microsoft Corporation.  All rights reserved.
+ 
+TARGETNAME=UART
+TARGETTYPE=LIBRARY
+TARGETPATH=..\lib
+
+C_DEFINES=-D_WIN32 -DUNICODE -D_UNICODE -DUNDER_NT -DDEBUG_LEVEL=DEBUGLVL_TERSE
+
+LINKER_FLAGS=-map
+
+INCLUDES=..\inc
+
+MSC_WARNING_LEVEL=-W3 -WX
+
+SOURCES=\
+        miniport.cpp \
+        MPU.cpp

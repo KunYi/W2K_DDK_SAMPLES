@@ -1,0 +1,39 @@
+NOT_UNICODE=1
+TARGETNAME=getimage
+TARGETPATH=obj
+TARGETTYPE=PROGRAM
+UMTYPE=console
+UMENTRY=main
+DLLENTRY=DllEntryPoint
+NO_NTDLL=1
+
+USE_NATIVE_EH =1
+USE_MAPSYM=1
+USE_LIBCMT=1
+USE_MSVCRT=1
+
+USER_INCLUDES=$(BASEDIR)\src\preview\wdm\wia\inc
+
+USER_C_FLAGS=-Gy
+
+SOURCES= \
+        getimage.cpp \
+        getimage.rc
+
+PRECOMPILED_CXX=1
+PRECOMPILED_INCLUDE=stdafx.h
+PRECOMPILED_PCH=stdafx.pch
+PRECOMPILED_OBJ=stdafx.obj
+
+TARGETLIBS=$(TARGETLIBS) \
+           $(SDK_LIB_PATH)\kernel32.lib \
+           $(SDK_LIB_PATH)\user32.lib   \
+           $(SDK_LIB_PATH)\ole32.lib    \
+           $(SDK_LIB_PATH)\uuid.lib     \
+           $(SDK_LIB_PATH)\oleaut32.lib \
+           $(SDK_LIB_PATH)\sti.lib      \
+           $(SDK_LIB_PATH)\wiaguid.lib
+
+##WIN32_IE_VERSION=0x400
+
+

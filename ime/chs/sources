@@ -1,0 +1,41 @@
+
+TARGETNAME=WINGB
+TARGETEXT=IME
+TARGETPATH=obj
+TARGETTYPE=DYNLINK
+TARGETLIBS=$(DDK_LIB_PATH)\user32.lib      \
+           $(DDK_LIB_PATH)\advapi32.lib    \
+           $(DDK_LIB_PATH)\kernel32.lib    \
+           $(DDK_LIB_PATH)\GDI32.LIB       \
+           $(DDK_LIB_PATH)\IMM32.LIB       \
+           $(DDK_LIB_PATH)\HTMLHELP.LIB    \
+           $(DDK_LIB_PATH)\COMDLG32.LIB    
+
+DLLBASE=0x73200000
+DLLENTRY=ImeDllInit
+USE_CRTDLL=1
+
+C_DEFINES=-DBUILDDLL -DCOMBO_IME -DCROSSREF -DUNICODE -D_UNICODE -DMUL_MONITOR
+!if defined(IDEBUG)
+C_DEFINES=$(C_DEFINES) -DIDEBUG 
+!endif
+
+INCLUDES=.;$(BASEDIR)\src\ime\inc
+
+SOURCES=\
+        INIT.c       \
+        CHCAND.c     \
+        CANDUI.c     \
+        COMPOSE.c    \
+        COMPUI.c     \
+        DATA.c       \
+        DDIS.c       \
+        NOTIFY.c     \
+        REGWORD.c    \
+        STATUSUI.c   \
+        TOASCII.c    \
+        UI.c         \
+        UISUBS.c     \
+        MMONITOR.c   \
+        WINGB.rc
+

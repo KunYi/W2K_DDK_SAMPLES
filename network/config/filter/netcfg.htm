@@ -1,0 +1,206 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 9">
+<meta name=Originator content="Microsoft Word 9">
+<link rel=File-List href="./netcfg_files/filelist.xml">
+<title>Config</title>
+<style>
+<!--
+ /* Font Definitions */
+@font-face
+	{font-family:"MS Sans Serif";
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-format:other;
+	mso-font-pitch:variable;
+	mso-font-signature:3 0 0 0 1 0;}
+@font-face
+	{font-family:Verdana;
+	panose-1:2 11 6 4 3 5 4 4 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:536871559 0 0 0 415 0;}
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+pre
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:"Courier New";
+	mso-fareast-font-family:"Courier New";}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+</head>
+
+<body lang=EN-US link=blue vlink=blue style='tab-interval:.5in'>
+
+<div class=Section1>
+
+<h2><span style='font-family:Verdana'>Config<o:p></o:p></span></h2>
+
+<p><span style='font-size:10.0pt;font-family:Arial;color:red'>[This is
+preliminary documentation and subject to change.]</span><span style='font-size:
+10.0pt;font-family:Verdana'><o:p></o:p></span></p>
+
+<h3><span style='font-family:Verdana'>SUMMARY<o:p></o:p></span></h3>
+
+<p><span style='font-size:10.0pt;font-family:Verdana'>This sample demonstrates
+how to write an .inf file and a notify object for installing and configuring an
+NDIS intermediate driver as a filter. Note that writing a notify object is
+optional, and is not required for proper installation of a filter. <o:p></o:p></span></p>
+
+<p><span style='font-size:10.0pt;font-family:Verdana'>A notify object should
+only be used if one needs to provide custom property sheet pages or if one
+needs non-default binding behavior. Note that in almost all cases, the default
+binding behavior afforded through the .inf is sufficient. The .inf supplied has
+ample documentation lines that clearly specify the parts of the .inf general to
+any networking component and the parts that are essential for installing a
+filter. <o:p></o:p></span></p>
+
+<p><span style='font-size:10.0pt;font-family:Verdana'>The notify object code
+shows how to: <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Symbol;mso-ascii-font-family:
+Verdana'>·</span><span style='font-size:10.0pt;font-family:Verdana'><span
+style="mso-spacerun: yes">  </span>Write a basic notify object to configure a
+filter. <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Symbol;mso-ascii-font-family:
+Verdana'>·</span><span style='font-size:10.0pt;font-family:Verdana'><span
+style="mso-spacerun: yes">  </span>Defer registry operations until the
+&quot;ApplyRegistryChanges&quot; method is called, so that a &quot;Cancel&quot;
+operation will not result in unnecessary changes to the registry. <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Symbol;mso-ascii-font-family:
+Verdana'>·</span><span style='font-size:10.0pt;font-family:Verdana'><span
+style="mso-spacerun: yes">  </span>Receive notifications when other components
+are added, removed, bound, or unbound. <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Symbol;mso-ascii-font-family:
+Verdana'>·</span><span style='font-size:10.0pt;font-family:Verdana'><span
+style="mso-spacerun: yes">  </span>Provide a custom property sheet page that
+will be used by the Connections UI to configure your component.<o:p></o:p></span></p>
+
+<p><span style='font-size:10.0pt;font-family:Verdana'>The sample compiles
+properly for 64-bit, builds properly with Microsoft® Visual C® 6.0, and
+supports Plug and Play. <o:p></o:p></span></p>
+
+<h3><span style='font-family:Verdana'>BUILDING THE SAMPLE<o:p></o:p></span></h3>
+
+<p><span style='font-size:10.0pt;font-family:Verdana'>To build the sample, type
+<b>build</b>. Once built, the sample will produce two binaries: Sfilter.dll and
+Snetcfg.exe. Sfilter.dll is the sample notify object for filter components, and
+Snetcfg.exe is a sample executable that shows how to use various INetCfg
+interfaces.<o:p></o:p></span></p>
+
+<h3><span style='font-family:Verdana'>INSTALLING THE SAMPLE<o:p></o:p></span></h3>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Verdana'>Following
+are installation instructions for the Filter sample through the connection
+folder.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-right:.5in;mso-margin-top-alt:auto;mso-margin-bottom-alt:
+auto;margin-left:.5in'><span style='font-size:10.0pt;font-family:Verdana'>1.
+Create a local directory on the machine (for instance, d:\<i>sample</i>).<o:p></o:p></span></p>
+
+<p style='margin-right:.5in;margin-left:.5in'><span style='font-size:10.0pt;
+font-family:Verdana'>2. Copy Sfilter.dll, Netsf.inf, Netsf_m.inf, Passthru.sys
+to the directory.<o:p></o:p></span></p>
+
+<p style='margin-right:.5in;margin-left:.5in'><span style='font-size:10.0pt;
+font-family:Verdana'>3. Open the connection folder.<o:p></o:p></span></p>
+
+<p style='margin-right:.5in;margin-left:.5in'><span style='font-size:10.0pt;
+font-family:Verdana'>4. Raise the properties for a LAN connection, click the <b>Install</b>
+button, select <b>Service</b>, and click <b>Add</b>.<o:p></o:p></span></p>
+
+<p style='margin-right:.5in;margin-left:.5in'><span style='font-size:10.0pt;
+font-family:Verdana'>5. Click <b>Have Disk</b>, and then specify the path to
+the local directory you just created.<o:p></o:p></span></p>
+
+<p style='margin-right:.5in;margin-left:.5in'><span style='font-size:10.0pt;
+font-family:Verdana'>6. Select <b>Sample Filter</b>, and then click <b>OK</b>
+in the <b>Select Network Service</b> dialog box.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:Verdana'>Here's an
+alternate way to install the sample by using Snetcfg.exe as the sample client.
+To install, type <b>snetcfg -l d:\sample\netsf.inf -c s -i ms_sfilter</b>. To
+uninstall, type <b>snetcfg -u ms_sfilter</b><o:p></o:p></span></p>
+
+<h3><span style='font-family:Verdana'>CODE TOUR<o:p></o:p></span></h3>
+
+<h4><span style='font-family:Verdana'>File Manifest<o:p></o:p></span></h4>
+
+<pre><u>File<span style='mso-tab-count:2'>           </span>Description<o:p></o:p></u></pre><pre><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></pre><pre><b>Filter</b><span
+style='mso-tab-count:2'>         </span><b>Directory for the Filter notify object sample</b></pre><pre>Dllmain.cpp<span
+style='mso-tab-count:1'>    </span>File containing implementations of DLL entry point and exports </pre><pre>Implinc.cpp<span
+style='mso-tab-count:1'>    </span>File including source code for ATL utilities</pre><pre>Pch.h<span
+style='mso-tab-count:2'>          </span>Pre-compiled header file</pre><pre>Netcfg.htm<span
+style='mso-tab-count:1'>     </span>The documentation for the Filter sample</pre><pre>Resource.h<span
+style='mso-tab-count:1'>     </span>The resource header</pre><pre>Sfilter.cpp<span
+style='mso-tab-count:1'>    </span>Notify object's implementation for the sample filter</pre><pre>Sfilter.def<span
+style='mso-tab-count:1'>    </span>Filter sample's def file</pre><pre>Sfilter.h<span
+style='mso-tab-count:1'>      </span>The header file for Sfilter.cpp</pre><pre>Sfilter.rc<span
+style='mso-tab-count:1'>     </span>The resource file for the filter notify object's sample</pre><pre>Sfilter.rgs<span
+style='mso-tab-count:1'>    </span>Script-based registry support for the filter notify object</pre><pre>Sfiltern.idl<span
+style='mso-tab-count:1'>   </span>Filter notify object's .idl file</pre><pre><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></pre><pre><b>Netcfg</b><span
+style='mso-tab-count:2'>         </span><b>Directory for the NetCfg sample</b></pre><pre>Idls.idl<span
+style='mso-tab-count:1'>       </span>This file includes Netcfgx.idl</pre><pre>Implinc.cpp<span
+style='mso-tab-count:1'>    </span>File including guids definitions for the com stuff used by the Netcfg sample</pre><pre>Main.cpp<span
+style='mso-tab-count:1'>       </span>File containing implementations of main and usage functions</pre><pre>Pch.h<span
+style='mso-tab-count:2'>          </span>Pre-compiled header file</pre><pre>Snetcfg.cpp<span
+style='mso-tab-count:1'>    </span>The actual sample source for Netcfg APIs</pre><pre>Snetcfg.h<span
+style='mso-tab-count:1'>      </span>The header file for Snetcfg.cpp</pre><pre>Snetcfg.rc<span
+style='mso-tab-count:1'>     </span>The resource file for the Netcfg sample</pre><pre><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></pre><pre><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></pre>
+
+<p align=center style='text-align:center'><a href="#top"><span
+style='font-size:10.0pt;font-family:Verdana'>Top of page</span></a><span
+style='font-size:10.0pt;font-family:Verdana'> <o:p></o:p></span></p>
+
+<table border=0 cellspacing=0 cellpadding=0 width=624 style='width:6.5in;
+ mso-cellspacing:0in'>
+ <tr style='height:1.5pt'>
+  <td style='background:aqua;padding:.75pt .75pt .75pt .75pt;height:1.5pt'>
+  <p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+  </td>
+ </tr>
+</table>
+
+<p><span style='font-size:7.5pt;font-family:"MS Sans Serif"'>© Microsoft
+Corporation 1999</span><span style='font-size:10.0pt;font-family:Verdana'> <o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>

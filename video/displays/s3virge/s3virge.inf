@@ -1,0 +1,9 @@
+Microsoft does not provide any sample video driver inf files because trying
+to create a new inf starting from a sample generally causes bugs in the inf.
+
+Instead, Microsoft provides a tool called "videoinf.exe" which will generate
+an inf for your video driver.  This tools will ask you questions about your
+hardware and driver, and will generate the inf for you.
+
+You can then edit and add any extra data you need to this inf afterwards.
+

@@ -1,0 +1,65 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-
+1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>AC97</TITLE>
+</HEAD>
+<BODY LINK="#0000ff">
+
+<FONT FACE="Verdana" SIZE=5><H2>AC97 Property Page Sample</H2>
+</FONT><FONT FACE="Verdana" SIZE=2>
+<P><span style="color:#FF0000;font-size:10pt;font-family:Arial">[This is preliminary 
+documentation and subject to change.]</span></P>
+
+<H3>SUMMARY</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+This sample driver demonstrates the basics of writing a
+property page DLL that displayes a property sheet in the properties dialog of your device and can be used as a base to write your own property page DLL. The sample driver works together with the AC97 sample driver.<P>
+
+Its functionality may be expanded
+for non-AC97 design features or to convert the driver to communicate with different drivers. For more information, please see the "ADDITIONAL INFORMATION TO THE SAMPLE" section below. <P>  
+
+<H3>BUILDING THE SAMPLE</H3></FONT><FONT FACE="Verdana" 
+SIZE=2><P>
+To build this sample, enter the free or checked build environment and run <B>build</B> from the Audio parent directory, rather than the Ac97 subdirectory. This sample links with Stdunk.lib, which is also built if you run build from Audio.<P>
+
+The .inf included in the Ac97 subdirectory (Ac97smpl.inf) can be used to install this sample together with the ac97 sample driver after it has been built.  Simply copy the .inf and the driver binaries to a floppy disk and then update the driver for the device with the one from the floppy.<P>
+
+Once the driver has been installed with the .inf, 
+the driver may be updated by copying the DLL into \\Winnt\System32 on the target machine to test the new driver, provided that there are no .inf
+changes.<p>
+
+<H3>ADDITIONAL INFORMATION TO THE SAMPLE</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+This sample property page only runs on Microsoft® Windows® 2000 (or higher) operating systems. If you want to modify the DLL to run on Microsoft® Windows® 98 Second Edition (or higher) operating systems you need to provide a thunk-layer DLL that translates the 16-bit DLL calls made by the device manager into 32-bit DLL calls that are used in the sample.
+<p>
+The sample uses a special property set to talk with the driver. This property set is only known by the ac97 sample driver and this sample.
+<p>
+The private property is exposed as a filter property. As a result of this, we don't have to pass down a KSP_NODE structure but a KSPROPERTY structure (which is missing the node). Add properties to the topology filter if they are generic and not connected with a node.
+<p>
+You can pass down additional information besides the KSPROPERTY structure. Whatever you add after the structure is passed to the topology handler.  The "Instance" pointer points to the added data and the "InstanceSize" variable in the PPCPROPERTY_REQUEST structure contains the additional buffer length. The output buffer that was passed in the DeviceIoControl call is the "Value" pointer (and "ValueSize" variable).
+<p>
+Use node properties (define your own GUID, attach that to the node like the KSPROPSETID_Audio is attached to for example volume nodes) if the property changes values of that node (special 3d node for example). Make sure you specify KSPROPERTY_TYPE_TOPOLOGY when you talk with a node and pass at least a KSP_NODE structure down.  Everything passed after KSP_NODE is again accessible with the "Instance" and "InstanceSize" variables.
+<H3>CODE TOUR</H3>
+<H4>File Manifest</H4>
+</FONT><U><PRE>File&#9;&#9;Description
+</U>
+Ac97prop.cpp&#9;Does all the work
+Ac97prop.def&#9;Library Definitions
+Ac97smpl.inf&#9;Setup information
+Ac97prop.rc &#9;Resource file containing version information
+Makefile    &#9;Standard Windows NT makefile
+Prvprop.h   &#9;Definition of the private property
+Readme.htm  &#9;Documentation for this sample (this file)
+Resource.h  &#9;Resource information
+Sources     &#9;Dependency information for compiling
+Version.h   &#9;Versioning information
+
+</FONT><P ALIGN="CENTER"><A HREF="#top"><FONT FACE="Verdana" SIZE=2>Top of page</FONT></A><FONT FACE="Verdana" SIZE=2> </P></FONT>
+<TABLE CELLSPACING=0 BORDER=0 WIDTH=624>
+<TR><TD VALIGN="MIDDLE" BGCOLOR="#00ffff" HEIGHT=2>
+<P></TD>
+</TR>
+</TABLE>
+
+<FONT FACE="MS Sans Serif" SIZE=1><P>&copy; Microsoft Corporation 1999</FONT><FONT FACE="Verdana" SIZE=2> </P></FONT></BODY>
+</HTML>
